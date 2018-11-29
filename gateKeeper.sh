@@ -70,6 +70,9 @@ All Traffic or just rotrrent?(or other program if you want to edit script to sup
 uses TODO insert program here for throttling all traffic, uses program API to throttle program(rtorrent)
 uses ufw to kill all traffic
 '
+#~TODO add custom option
+#~user adds api command etc
+#~and section for math(if program doesnt use KiB
 #~accepts[string]: "all"|"rtorrent"
 runType="rtorrent"
 
@@ -232,7 +235,9 @@ _convertBytes() {
 #~~~~~~~~~~~~~~~~~~#
 
 #_calculate $resetType $resetTime $resetDay $resetMonth
-if [[ `date +%d` -gtr 19 ]]; then
+#~lol justrealized how inconsistent my commenting format is here ... lol
+#~use +1 $resetType - figure how make other dynamic? insteaf of greater than 19 do greater than resetType -1 (if was in an array?)
+if [ `date +%d` -gtr 19 ]; then
 	beginDate=`date +%Y-%m-19`
 	endDate=$(date --date="`date +%Y-%m-19` +1 month" +%Y-%m-19)
 else
@@ -247,7 +252,7 @@ timeLeft=$((date --date="$endDate" +%s) - (date +%s))
 rate=$(echo "($dataCap - $usedData) / ($timeLeft)" | bc -l)
 #~should return KiB/s which is conveniently what rtorrent uses
 #_if throttle == yes _throttle
-#xmlrpc 
+#xmlrpc (really hoping i can get rtorrent to accept KiB... without supplying a hash)
 #~end of script if data is greater than cap its killed, if its less than cap and throttle is enabled then itll
 #~throttle(if throttle isnt enabled, then itll just kill when over cap like with throttle
 
