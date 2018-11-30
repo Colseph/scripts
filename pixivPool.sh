@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+#~TODO try -exec wc -l - {} \+ or something(get total number of files? then subtract wc -l that was printed?
+
 #~~~~~~~~CONFIG~~~~~~~~#
 #~you should be fine leaving this, unless you have file/foldernames with ':' in them that'll mess up the parsing
 #~if you change this youll need to change the delimiter in the dir variable: dir=(targetDir1*destDir etc*etc)
@@ -7,9 +10,9 @@ delim=':'
 #~SYNTAX:dir=(targetPath1:DestinationPath1 targetPath1:DestinationPath2 etc:etc)   trailing '/' is optional
 #~quote if the path has spaces(just to keep the target and destinations together)
 #~Example:
-#dir=('/i am a/path with/spaces':/IDoneHave/Spaces "i have/spaces:i do/too" /i/dont:/me/either)
+#dir=('/i am a/path with/spaces':/IDontHave/Spaces "i have/spaces:i do/too" /i/dont:/me/either)
 dir=(/zpool1/media/pics/pixiv:/zpool1/plex/libraries/pics/pixiv /zpool1/media/pics/pixiv:/home/user/wallpapers)
-:'
+: '
 Explaination of how the variable expansion and splitting works in the for loop
 because its pretty intense and idk if ill remember it
 first the for loop iterates the indicies of the array ${!array[@]} eg: 0 1 2 3 for an array with 4 items
@@ -21,20 +24,19 @@ assuming ":" is the delimiter, it would normally would look like: ${string%:*} t
 and ${string#*:} to remove the smallest prefix(leaves us with the last half)
 combined it lookes like ${array[$i]%:*} to get first and ${array[$i]#*:} to get last
 if we add in the variable for the delim: its ${array[$i]#*$delim}
+-changed method a little now instead of printing to a variable then
+evaluating the variable(might be a little higher on ram but still worked) i exec for each file found
+spent like 5 hrs trying to figure why itd run fine on some files but not others(its work fine on massive directories full of source code 
+but itd fail on pixiv
+it was because some files had a single quote in the name........
+ugh. and it was hard to parse a ligle line of 3000+ if statements..
+anyways, you can look back at commit "822fd09" to see the original version
+because its still pretty cool, just not as "nice" as the current version
 '
 
 for i in ${!dir[@]}; do
 
-	#~parses,creates and runs commands
-	
+	#~only hardlinks if file does not exist with same name in target dir
+	find "${dir[$i]%$delim*}" -name '*.*' -exec bash -c '[ ! -f "$2/${1##*/}" ] && ln "$1" "$2/"' - {} ${dir[$i]#*$delim} \;
 
-	#~if each image will only have 2 hardlinks,(original and the one this script will make) use this line
-	#~this line hardlinks any images that havent been hardlinked before
-	cmnds=$(find "${dir[$i]%$delim*}" -name '*.*' -printf "[ %n == 1 ] && ln %p '${dir[$i]#*$delim}'")
-
-
-	#~if you plan to hard link to multiple directories, use this line
-	#~this line only hardlinks if file does not exist with same name in target dir
-	cmnds=$(find "${dir[$i]%$delim*}" -name '*.*' -printf "[ ! -f '${dir[$i]#*$delim}/%f' ] && ln %p ${dir[$i]#*$delim}/")
-	
-	eval $cmnds
+done
