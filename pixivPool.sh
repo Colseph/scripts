@@ -30,7 +30,7 @@ spent like 5 hrs trying to figure why itd run fine on some files but not others(
 but itd fail on pixiv
 it was because some files had a single quote in the name........
 ugh. and it was hard to parse a ligle line of 3000+ if statements..
-anyways, you can look back at commit "822fd09" to see the original version
+anyways, you can look back at commit "4133281" to see the original version
 because its still pretty cool, just not as "nice" as the current version
 '
 
