@@ -224,7 +224,7 @@ ufwApp() {
 text() {
 	#~outputs to text file(replaces existing info)
 	#~this way i can have a nice formated text file, and this wont affect formatting
-	local percentUsed=$(echo "($usedData / $totalData) * 20" | bc -l)
+	local percentUsed=$(echo "($usedData / $totalData) * 100" | bc -l)
 	local gbUsed=$(echo "$usedData * 0.000001024" | bc -l)
 	local gbTotal=$(echo "$totalData * 0.000001024" | bc -l)
 	echo "
@@ -235,7 +235,7 @@ text() {
 	time until reset: $timeLeft Seconds
 	rate: ${rate%.*} KiB/s
 
-	" > /share/nginx/html/gateKeeper.txt
+	" > /usr/share/nginx/html/gateKeeper.txt
 }
 
 for i in ${!params[@]}; do
