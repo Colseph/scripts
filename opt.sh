@@ -142,7 +142,10 @@ log() {
 #~it actually loops through the array index so i can call the whole array value
 #~where if i just looped through the array, it thinks the folders w/ spaces are different args
 #~EVEN W/ QUOTING.. ugh bash..
-log begin
+#~lock file(so you dont have 2 instances at once
+[ -e ~/opt.sh.lock ] && log date "another instance started but found lock file. --> EOF" && exit ||\
+	log begin && log date "lock file not found, creating '~/opt.sh.lock' and continuing." && touch ~/opt.sh.lock
+
 for index in ${!libs[@]}; do
 	#~assign vars for current index so its easier to understand the next bit
 	localLib="$localBase/${libs[$index]#*$delim}/Plex Versions"
@@ -165,10 +168,14 @@ for index in ${!libs[@]}; do
 		log date "[${libs[$index]}]: Calling Plex Scanner w/ args '-s -c $libID -d $remoteLib'"
 		#~scan directory
 		#~lol took a little while to get the quoting to work right
+		#~sleeps first to allow cloud to sync/update different mounts
+		sleep 300
 		su plex -c "$setEnv; '$pScan' -s -c $libID -d '$plexLib'"
 	else
 		#~does nothing - and wirtes to log
 		log date "[${libs[$index]}]: Conditions NOT met: Skipping.."
 	fi
 done
+log date "removing lock file '~/opt.sh.lock'"
+rm ~/opt.sh.lock
 log end
