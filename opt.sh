@@ -1,29 +1,71 @@
 #!/usr/bin/env bash
 
-#~TODO verify path variables work w/ spaces etc..
 
 : '
 this script is for moving / rescanning plex optimized versions for rclone mount
-assumes your setup is as such:
-	/[local base]/plex/[library folder]
-	/[remote base]/plex/[library folder]
-	then each library has both the local and remote folders added
-	in the optimize options you choose the /[local base]/plex/[library folder]
-how it works:
-	- plex will make the optimized version in the local dir(not spamming out in the cloud)
-	- then this script will be run every x min. this script will only something both of the
-	  following conditions are met:
-		1 - there are optimized versions on local, that need to be moved to cloud
-		2 - no in progress conversions(no files exist in .inProgress dirs)
-	  (this is to help with google api limit)
-	- rclone moves /[local base]/plex/[library folder]/Plex Versions to
-		/[remote base]/plex/[library folder]/Plex Versions
-	- then it uses Plex Media Scanner to scan only the Plex Versions folder
-	  in the corrisponding library(what the Section ID is needed for)
+take a look at the config section before reading this so you understand better how it works
+
+***using the plex scanner requires plex user, so you have two options:
+	1. Run this script as is as root(or in roots crontab)(only do if you trust && understand this script)
+	2. run as plex user(this will require modification to the plex scan line in the script)
+		and you could also change the setEnv= line to just exporting the env variables
+		youll also need to make sure the plex user has write access to remote locations
+		and if you use a remote like "dgrive:path" youll need the remote to be added to the plex users rclone config
+
+uses the following structure
+	[base path]\[library]
+		***the script assumes that the directory containing your libraries is the same across local, remote, and plex
+		-the base path is the directory your libraries is located in
+		-the library is the FOLDER of the libraries
+	Examples:
+		Two Drive mount point
+		Folder structure as such:
+			/
+			├── 1localstorage
+			│   └── plex
+			│       ├── anime
+			│       ├── movies
+			│       └── Tv Shows
+			├── googledrivemount(read+write)
+			│   └── plex
+			│       ├── anime
+			│       ├── movies
+			│       └── Tv Shows
+			└── plexdrivemount(readonly)
+			    └── plex
+				├── anime
+				├── movies
+				└── Tv Shows
+		Your config would look like:
+			[base path]s
+			localBase=/1localstorage/plex
+			remoteBase=/googledrivemount(read+write)/plex
+			plexBase=/plexdrive(readonly)/plex
+			
+			[libraries](see below how to get the IDs)
+			libs=(5:/anime 3:"TV Shows" 4:movies)
+		
+		How it works:
+		in plex each library should have both the plexdrivemount(readonly)/plex/[library] AND
+			the 1localstorage/plex/[library] folders added
+		
+		then make an optimize job and select the 1localstorage/plex/[library] path
+			
+		plex will then optimize and save to 1localstorage/plex/[library]/Plex\ Versions/
+		
+		youd run this script every ~5-10min or so. the script would only do anything when both of the following
+		conditions are met:
+			-files exist in [library]Plex\ Versions/
+			-files DO NOT exist in [library]/Plex\ Versions/*./.inProgress/
+			basically only run if there are optimized versions and they are ALL finished/no in progress
+			
+		it would then rclone move everything from [local base]/[library]/Plex\ Versions/
+			to [remote base]\[library]/Plex\ Versions/
+		
+		then it rould tell plex to scan the specified library(with the ID) but only the Plex\ Versions directory
+		ie. Plex\ Media\ Scanner -s -c [libID] -d [plex base]/[library]/Plex\ Versions/
 '
 
-#~ youll need to fill in your library IDs and FOLDERs(not names) in the config section below.
-#~to find the library IDs either run the 'Plex Media Scanner' w/ -l arg
 
 #~~~~~~~~~~#
 #~ Config ~#
@@ -34,11 +76,6 @@ how it works:
 #~	feel free to make monthly logs to ie: logFile=optimizations_`date +%Y-%m`.log
 logFile=~/optimizations.log
 
-#~base paths
-localBase=/media
-#~remote needs to be path to mount if you use ie gdrive:media plex scanner wont know wheretf that is
-remoteBase=/test/remote/path
-
 #~delimiter (this is if your lib folder has a ':' in it you can change this to something else
 #~obv if you change this, you need to change the ':' in the libs array too.
 #~ example:
@@ -46,7 +83,17 @@ remoteBase=/test/remote/path
 #~	libs=(1-movies 2-'tv shows')
 delim=:
 
-#~folders
+#~[base path]s
+localBase=/media
+#~remote base - can be to a mount or an rclone remote ie gdrive:path
+#~using a cache is recommended(or you might get nothing but input/output errors.... .............. .... ugh..
+remoteBase=gdrive:media
+#~plex base - this might be the same as your remote base
+#~i added this because on my build, plex reads from plexdrive readonly mount, so my wright directory is different
+plexBase=/datapool/plexdrive
+
+#~[libraries]
+#~to find the library IDs run the 'Plex Media Scanner' w/ -l or --list arguments
 #~ example: first w/ no spaces next two are options for quoting folders with spaces
 #~	libs=(2:/movies 6:'/tv shows' "4:/other videos" 3:/anime_tv)
 #~remember to put the library FOLDER, not the name
@@ -57,8 +104,7 @@ libs=(5:/anime 3:Leading_slash_not_needed "4:thisis a test" 6:'this too')
 #~plex env vars and plex scanner bin(for clenliness in main stript)
 #~these are the ones for my arch install, yours may be different
 #~(you can probs get them or find where they are from the service file)
-export LD_LIBRARY_PATH=/usr/lib/plexmediaserver
-export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR=/var/lib/plex
+setEnv="export LD_LIBRARY_PATH=/usr/lib/plexmediaserver export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR=/var/lib/plex"
 pScan="/usr/lib/plexmediaserver/Plex Media Scanner"
 
 #~~~~~~~~~~~~~#
@@ -99,8 +145,9 @@ log() {
 log begin
 for index in ${!libs[@]}; do
 	#~assign vars for current index so its easier to understand the next bit
-	localLib="$localBase/plex/${libs[$index]#*$delim}/Plex Versions"
-	remoteLib="$remoteBase/plex/${libs[$index]#*$delim}/Plex Versions"
+	localLib="$localBase/${libs[$index]#*$delim}/Plex Versions"
+	remoteLib="$remoteBase/${libs[$index]#*$delim}/Plex Versions"
+	plexLib="$plexBase/${libs[$index]#*$delim}/Plex Versions"
 	libID=${libs[$index]%$delim*}
 
 
@@ -117,7 +164,8 @@ for index in ${!libs[@]}; do
 		log date "[${libs[$index]}]: rclone move finished with result of $ecode"
 		log date "[${libs[$index]}]: Calling Plex Scanner w/ args '-s -c $libID -d $remoteLib'"
 		#~scand directory
-		"$pScan" -s -c $libID -d "$remoteLib"
+		#~lol took a little while to get the quoting to work right
+		su plex -c "$setEnv; '$pScan' -s -c $libID -d '$remoteLib'"
 	else
 		#~does nothing - and wirtes to log
 		log date "[${libs[$index]}]: Conditions NOT met: Skipping.."
