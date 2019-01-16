@@ -172,12 +172,12 @@ for index in ${!libs[@]}; do
 		rclone move --exclude .inProgress/* "$localLib" "$remoteLib"
 		ecode=$?
 		log date "[${libs[$index]}]: rclone move finished with result of $ecode"
-		log date "[${libs[$index]}]: Calling Plex Scanner w/ args '-s -c $libID -d $remoteLib'"
 		#~scan directory
 		#~lol took a little while to get the quoting to work right
 		#~sleeps first to allow cloud to sync/update different mounts
 		log date "[${libs[$index]}]: sleeping $slp seconds to allow cloud-sync"
 		sleep $slp
+		log date "[${libs[$index]}]: Calling Plex Scanner w/ args '-s -c $libID -d $remoteLib'"
 		su plex -c "$setEnv; '$pScan' -s -c $libID -d '$plexLib'"
 	else
 		#~does nothing - and wirtes to log
