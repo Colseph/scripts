@@ -73,10 +73,10 @@ uses the following structure
 
 #~log file (set to '/dev/null' if u dont want logging
 #~	or to '&1' [stdout] if your running from cron and you want emails
-#~	feel free to make monthly logs to ie: logFile=optimizations_`date +%Y-%m`.log
+#~	feel free to make monthly logs too ie: logFile=optimizations_`date +%Y-%m`.log
 logFile=~/optimizations.log
 
-#~delimiter (this is if your lib folder has a ':' in it you can change this to something else
+#~delimiter (this is if your lib folder has a ':' in it you can change this to something else)
 #~obv if you change this, you need to change the ':' in the libs array too.
 #~ example:
 #~	delims=-
@@ -86,10 +86,10 @@ delim=:
 #~[base path]s
 localBase=/media
 #~remote base - can be to a mount or an rclone remote ie gdrive:path
-#~using a cache is recommended(or you might get nothing but input/output errors.... .............. .... ugh..
+#~using a cache is recommended(or you might get nothing but input/output errors.... .............. .... ugh..)
 remoteBase=gdrive:media
 #~plex base - this might be the same as your remote base
-#~i added this because on my build, plex reads from plexdrive readonly mount, so my wright directory is different
+#~i added this because on my build, plex reads from plexdrive readonly mount, so my write directory is different
 plexBase=/datapool/plexdrive
 
 #~[libraries]
@@ -163,9 +163,9 @@ for index in ${!libs[@]}; do
 		ecode=$?
 		log date "[${libs[$index]}]: rclone move finished with result of $ecode"
 		log date "[${libs[$index]}]: Calling Plex Scanner w/ args '-s -c $libID -d $remoteLib'"
-		#~scand directory
+		#~scan directory
 		#~lol took a little while to get the quoting to work right
-		su plex -c "$setEnv; '$pScan' -s -c $libID -d '$remoteLib'"
+		su plex -c "$setEnv; '$pScan' -s -c $libID -d '$plexLib'"
 	else
 		#~does nothing - and wirtes to log
 		log date "[${libs[$index]}]: Conditions NOT met: Skipping.."
