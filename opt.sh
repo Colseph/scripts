@@ -76,6 +76,13 @@ uses the following structure
 #~	feel free to make monthly logs too ie: logFile=optimizations_`date +%Y-%m`.log
 logFile=~/optimizations.log
 
+#~sleep
+#~how long in seconds to wait before scanning
+#~this allows time for all your mounts to sync so they'll be up to date when the scan occurs
+#~if your remote  and plex base are the same it might not even be needed
+#~default 5 min(300)
+slp=300
+
 #~delimiter (this is if your lib folder has a ':' in it you can change this to something else)
 #~obv if you change this, you need to change the ':' in the libs array too.
 #~ example:
@@ -169,7 +176,8 @@ for index in ${!libs[@]}; do
 		#~scan directory
 		#~lol took a little while to get the quoting to work right
 		#~sleeps first to allow cloud to sync/update different mounts
-		sleep 300
+		log date "[${libs[$index]}]: sleeping $slp seconds to allow cloud-sync"
+		sleep $slp
 		su plex -c "$setEnv; '$pScan' -s -c $libID -d '$plexLib'"
 	else
 		#~does nothing - and wirtes to log
