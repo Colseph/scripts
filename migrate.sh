@@ -19,7 +19,7 @@ logFile=~/rclone_migrations.log
 #~structure will be as so: 
 #~	└── [torrentDB]
 #~	    └── [torrentName]
-#~		├── [torrentHash].torrent <--this is the fastResume one
+#~		├── fast_resume_[torrentHash].torrent <--this is the fastResume one
 #~		└── [torrentName].torrent <--this is the normal one
 torrentDB=/datapool/gDrive/rtorrent/.torrentdb
 
