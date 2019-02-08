@@ -235,11 +235,16 @@ libID=${libs["$plexFolder"]}
 _log "libID='$libID'"
 #~replaces localBase path with plexDrive
 plexScanPath="$plexDrive/${mediaPath#"$localBase"}"
+#~appearantley plex scanner assumes each '/' is a directory.(so it thinks root//library/showname is an empty library with a show called library inside?...
+#~ugh. anyways this fixes it.
+plexScanPath="${plexScanPath/\/\//\/}"
 _log "plexScanPath='$plexScanPath'"
 
 
 if [ "$eventType" == "Download" ]; then
 	#~heres where the big work is done.
+	#~waits a LONG time(gives large batches time to import before the source files are moved etc..
+	sleep 600
 	_movePlexData
 	
 	_log date "[main]Processing Hash: $dlHash"
