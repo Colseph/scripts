@@ -243,6 +243,7 @@ _log "plexScanPath='$plexScanPath'"
 if [ "$eventType" == "Download" ]; then
 	#~heres where the big work is done.
 	#~waits a LONG time(gives large batches time to import before the source files are moved etc..
+	_log date "[main]Sleeping for 600 Seconds to allow for possible batch processing.."
 	sleep 600
 	_movePlexData
 	
