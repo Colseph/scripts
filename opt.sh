@@ -158,6 +158,8 @@ for index in ${!libs[@]}; do
 	localLib="$localBase/${libs[$index]#*$delim}/Plex Versions"
 	remoteLib="$remoteBase/${libs[$index]#*$delim}/Plex Versions"
 	plexLib="$plexBase/${libs[$index]#*$delim}/Plex Versions"
+	#~fixes scan issue(not sure if this one suffers, but better to be safe than a l
+	plexLib="${plexLib/\/\//\/}"
 	libID=${libs[$index]%$delim*}
 
 
