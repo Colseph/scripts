@@ -197,7 +197,6 @@ _scanPlex() {
 #~~~~~~~~~~~~~~~~~~~~~#
 #~checks some paths, and sets some variables
 _checkDirectory "$torrentDB"
-_checkDirectory "$dbFolder"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #~ [insert japanglish 'skuriputo sutaato' here] ~#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
