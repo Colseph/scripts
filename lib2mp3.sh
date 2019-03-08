@@ -12,6 +12,15 @@ _help() {
     echo "
     usage:
     --help show this message
+
+    -b bitrate for mp3 files
+       defualt=320K
+
+    -s source dir(the one w/ the non mp3s)
+       default=./
+
+    -d destination dir(where you want the mp3s)
+       defualt=./mp3_converted
     "
 }
 
