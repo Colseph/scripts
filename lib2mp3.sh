@@ -66,5 +66,5 @@ echo bitrate:$bitrate
 find "$sourceDir" -type d -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; mkdir -p "$destPath"' - {} "$destDir" "$sourceDir" \;
 
 #~encode files
-find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; [[ "$1" == *".mp3" ]] && cp "$1" "$destPath" || ffmpeg -v quiet -stats -i "$1" -ab "$bitrate" -map_metadata 0 -id3v2_version 3 "${destPath%.*}.mp3"' - {} "$destDir" "$sourceDir" \;
+find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; [[ "$1" == *".mp3" ]] && cp "$1" "$destPath" || ffmpeg -v quiet -stats -i "$1" -ab "$4" -map_metadata 0 -id3v2_version 3 "${destPath%.*}.mp3"' - {} "$destDir" "$sourceDir" "$bitrate" \;
 echo Done.
