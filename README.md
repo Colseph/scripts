@@ -22,3 +22,13 @@ _various scripts to accomidate my lazyness_
      <br>**while preserving the folder structure**
      <br>had a massive script originally then realized the whole thing could be done in like 2 lines.
      <br>(its not 2 lines because parameters are nice etc..)
+
+#### time.sh
+   * does math with timestamps (+,-,*,/)
+     <br>can also do logic -- ie. 12:00:00 > 00:1000:00 will return false
+     <br>cant do carrot/exponential stuff(^) atm, idk if ill take time to figure it out
+     <br><br>its kind of weird, how the multiplication/division work as it converts to seconds.nanoseconds to do the math,
+     <br>then back to HH:MM:SS.nnnnnnnnnn
+     <br>idk its just a concept
+     <br>orininally made so someday i could change [delinker](https://github.com/Colseph/Delinker) to just bash,
+     <br>but i got a little carried away.. lol
