@@ -1,0 +1,52 @@
+_should be a gist or something, but wanted it here so its w/ my other scripts.._
+# Crontab
+
+## archiving multiple links w/ tools like youtube-dl/gallery-dl
+
+_instead of having a cronjob for each channel/artist/gallery - one line in crontab that reads textfile w/ links_
+
+_easier to add a link to a text file than create a new cronjob_
+
+**change paths accordingly**
+
+
+### gallery-dl(todo, need to check config/setup on server)
+
+_iterates over lines in_`~/.cron/gallery-dl.txt`_, only processes lines w/_ `link:` _at beginning_
+_im not going to go into detail about configs. for that, see wiki [here]()_
+
+#### crontab:
+
+```
+while read LINE; do if [[ "$LINE" == "link:"* ]]; then gallery-dl; fi; done < ~/.cron/gallery-dl.txt
+```
+
+#### textfile:
+
+_comment/artistname_
+
+`link:[insert link here]`
+
+
+### youtube-dl
+
+_more advanced than one for gallery-dl as it accepts flags in textfile_
+
+**as of now, spaces dont work for flags passed in the textfile**
+
+#### crontab:
+
+_youtube-dl command w/ general flags you want for all videos_
+
+```
+while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl -i --download-archive ~/.cron/youtube-dl_archive.txt -f bestvideo+bestaudio --merge-output-format mkv --add-metadata --write-annotations --write-info-json --write-thumbnail --all-subs --embed-thumbnail --embed-subs -o /zpool/youtube/%(uploader)s/%(title)s-%(id)s.%(ext)s ${link[1]} ${link[0]}; fi; done < ~/.cron/youtube-dl.txt
+```
+
+#### textfile:
+
+_links and optional link specific flags(filter names etc..) in array format as that seemed to be the easiest way to keep link and flags associated_
+
+_you can also override flags, as later flags have higher priority_
+
+`link=('https://link.here.com' '--optional-flags here --other-flags-here')`
+<hr>
