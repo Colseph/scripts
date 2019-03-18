@@ -33,3 +33,5 @@ _various scripts to accomidate my lazyness_
      <br>idk its just a concept
      <br>orininally made so someday i could change [delinker](https://github.com/Colseph/Delinker) to just bash,
      <br>but i got a little carried away.. lol
+
+#### [crontab.md](https://github.com/Colseph/scripts/blob/master/crontab.md)
