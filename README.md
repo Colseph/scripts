@@ -24,10 +24,11 @@ _various scripts to accomidate my lazyness_
      <br>(its not 2 lines because parameters are nice etc..)
 
 #### time.sh
-   * does math with timestamps (+,-)(you can _try_ multiplication/division, but its not really possible w/ time(tries to use hours as base unit).
+   * does math with timestamps (+,-)(you can _try_ multiplication/division, but its not really possible w/ time
      <br>can also do logic -- ie. 12:00:00 > 00:1000:00 will return false
      <br>cant do carrot/exponential stuff(^)
-     <br><br>its kind of weird, how the multiplication/division work as it converts to seconds.nanoseconds to do the math,
+     <br><br>The attempted multiplication/division work by converting to seconds.nanoseconds to do the math,
+     <br>(tries to use hours as base unit).
      <br>then back to HH:MM:SS.nnnnnnnnnn
      <br>idk its just a concept
      <br>orininally made so someday i could change [delinker](https://github.com/Colseph/Delinker) to just bash,
