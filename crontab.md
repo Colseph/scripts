@@ -32,18 +32,22 @@ _comment/artistname_
 
 _more advanced than one for gallery-dl as it accepts flags in textfile_
 
-**as of now, spaces dont work for flags passed in the textfile**
+~~**as of now, spaces dont work for flags passed in the textfile**~~
+spaces **do** work now you just need to quote them, see example
+<br>you could just have a set of flags/urls on each line without the whole if statement
+<br>but this way i can put comments and idk how it would handle spaces the other way
+<br>if you quote an array w/ the '@' bash is smart enough to properly quote each argument(or treat each like its quoted.)
 
 #### crontab:
 
 _youtube-dl command w/ general flags you want for all videos, for examaple:_
 
 ```
-while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl -i --download-archive ~/.cron/youtube-dl_archive.txt -f bestvideo+bestaudio --merge-output-format mkv --add-metadata --write-annotations --write-info-json --write-thumbnail --all-subs --embed-thumbnail --embed-subs -o /zpool/youtube/%(uploader)s/%(title)s-%(id)s.%(ext)s ${link[1]} ${link[0]}; fi; done < ~/.cron/youtube-dl.txt
+while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl -i --download-archive ~/.cron/youtube-dl_archive.txt -f bestvideo+bestaudio --merge-output-format mkv --add-metadata --write-annotations --write-info-json --write-thumbnail --all-subs --embed-thumbnail --embed-subs -o /zpool/youtube/%(uploader)s/%(title)s-%(id)s.%(ext)s "${link[@]}"; fi; done < ~/.cron/youtube-dl.txt
 ```
 _i just use a config file so my crontab looks like this:_
 ```
-while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl --ignore-config --config-location /home/user/.config/youtube-dl/config ${link[1]} ${link[0]}; fi; done < ~/.cron/youtube-dl.txt
+while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl --ignore-config --config-location /home/user/.config/youtube-dl/config "${link[@]}"; fi; done < ~/.cron/youtube-dl.txt
 ```
 
 #### textfile:
@@ -52,5 +56,5 @@ _links and optional link specific flags(filter names etc..) in array format as t
 
 _you can also override flags, as later flags have higher priority_
 
-`link=('https://link.here.com' '--optional-flags here --other-flags-here')`
+`link=(--optional-flag-here --other-flag 'data for flag w/ space' 'https://link.here.com')`
 <hr>
