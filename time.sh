@@ -15,22 +15,6 @@ _t2s() {
     printf '%s' "$1" | awk -F: '{ printf "%.10f", ($1 * 3600) + ($2 * 60) + $3 }'
 }
 
-_sit() {
-    #~converts SSSSS.nnn.. back to HH:MM:SS.nnn.. (thnx modulus ur a babe)
-    #~accepts one arg 
-    nanoSeconds=${1##*.}
-    echo $nanoSeconds
-    seconds=$((${1%.*} % 60))
-    echo $seconds
-    tMinutes=$((${1%.*} / 60))
-    echo $tMinutes
-    minutes=$(($tMinutes % 60))
-    echo $minutes
-    hours=$(($tMinutes / 60))
-    echo $hours
-    printf '%s:%s:%.10f' "$hours" "$minutes" "$seconds.$nanoSeconds"
-}
-
 _s2t() {
     #~converts SSSSS.nnn.. back to HH:MM:SS.nnn.. (thnx modulus ur a babe)
     #~accepts one arg 
