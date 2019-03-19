@@ -13,7 +13,7 @@ _easier to add a link to a text file than create a new cronjob_
 ### gallery-dl
 
 _iterates over lines in_`~/.config/gallery-dl/gallery-dl.txt`_, only processes lines w/_ `link:` _at beginning_
-_im not going to go into detail about configs. for that, see wiki [here](https://github.com/mikf/gallery-dl/tree/master/docs)_
+<br>_im not going to go into detail about configs. for that, see wiki [here](https://github.com/mikf/gallery-dl/tree/master/docs)_
 
 #### crontab:
 
@@ -46,11 +46,11 @@ you could just have a set of flags/urls on each line without the whole 'if' stat
 _youtube-dl command w/ general flags you want for all videos, for examaple:_
 
 ```
-while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl -i --download-archive ~/.cron/youtube-dl_archive.txt -f bestvideo+bestaudio --merge-output-format mkv --add-metadata --write-annotations --write-info-json --write-thumbnail --all-subs --embed-thumbnail --embed-subs -o /zpool/youtube/%(uploader)s/%(title)s-%(id)s.%(ext)s "${link[@]}"; fi; done < ~/.cron/youtube-dl.txt
+while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl -i --download-archive ~/.config/youtube-dl/youtube-dl_archive.txt -f bestvideo+bestaudio --merge-output-format mkv --add-metadata --write-annotations --write-info-json --write-thumbnail --all-subs --embed-thumbnail --embed-subs -o /zpool/youtube/%(uploader)s/%(title)s-%(id)s.%(ext)s "${link[@]}"; fi; done < ~/.config/youtube-dl/youtube-dl.txt
 ```
 _i just use a config file so my crontab looks like this:_
 ```
-while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl --ignore-config --config-location /home/user/.config/youtube-dl/config "${link[@]}"; fi; done < ~/.cron/youtube-dl.txt
+while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl --ignore-config --config-location /home/user/.config/youtube-dl/config "${link[@]}"; fi; done < ~/.config/youtube-dl/youtube-dl.txt
 ```
 
 #### textfile`youtube-dl.txt`:
