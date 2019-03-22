@@ -1,6 +1,10 @@
 ## Scripts
 _various scripts to accomidate my lazyness_
 
+## inProg branch:
+I tend to work from lots of different computers.
+<br>the branch is just a place for ideas and partial scripts.
+
 
 #### [pixivPool.sh](https://github.com/Colseph/scripts/blob/master/pixivPool.sh)
    * used alongside [PixivUtil2](https://github.com/Nandaka/PixivUtil2 "PixivUtil2"). iterates recursively through directory1,
