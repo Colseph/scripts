@@ -35,3 +35,13 @@ _various scripts to accomidate my lazyness_
      <br>but i got a little carried away.. lol
 
 #### [crontab.md](https://github.com/Colseph/scripts/blob/master/crontab.md)
+
+#### [gateKeeper](https://github.com/Colseph/scripts/blob/master/gateKeeper.sh)
+_bash script that throttles/kills network traffic based on amount used, and time left until data-cap reset_
+   * semi-incomplete atm, just geting base ideas down on "virtual paper" so to speak
+
+**Dependencies**
+   * vnstat
+
+**Todo**
+   * pause all torrents when limit reached
