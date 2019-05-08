@@ -48,6 +48,9 @@ _various scripts to accomidate my lazyness_
 
 #### [crontab.md](https://github.com/Colseph/scripts/blob/master/crontab.md)
 
+#### [Heisig and Monogatari: Bash fun!.md](https://github.com/Colseph/scripts/blob/master/Heisig%20and%20Monogatari:%20Bash%20fun!.md)
+   * minor text processing in relation to japanese and light novels
+
 #### [gateKeeper.sh](https://github.com/Colseph/scripts/blob/master/gateKeeper.sh)
 _bash script that throttles/kills network traffic based on amount used, and time left until data-cap reset_
    * semi-incomplete atm, just geting base ideas down on "virtual paper" so to speak
