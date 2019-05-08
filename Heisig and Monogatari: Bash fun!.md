@@ -20,7 +20,7 @@
 OK, so we have our Monogatari Series txtfiles. first thing we want to do is get a collective list of all kanji and occurrences.
 ```
 kuchinawa@nadeko ~/s/k/w/monogatari [0]
-$ls
+$ ls
 '01_化物語(上).txt'*    14_暦物語.txt*
 '02_化物語(下).txt'*    15_終物語（上）.txt*
  03_傷物語.txt*         16_終物語（中）.txt*
@@ -77,11 +77,11 @@ you'll notice its sorted by the character, this is really nice as it means all t
 <br>now we just cut the top off the file and we have our list of kanji. lets see how many we've got:
 ```
 kuchinawa@nadeko ~/s/k/w/monogatari [0]
-$cat kanji_list | wc -l #~total unique kanji in Monogatari Series novels
+$ cat kanji_list | wc -l #~total unique kanji in Monogatari Series novels
 2947
 
 kuchinawa@nadeko ~/s/k/w/monogatari [0]
-$total_kanji=0; while read LINE; do ((total_kanji+=${LINE% *})); done < kanji_list; echo $total_kanji #~total number of kanji characters in novels
+$ total_kanji=0; while read LINE; do ((total_kanji+=${LINE% *})); done < kanji_list; echo $total_kanji #~total number of kanji characters in novels
 877196
 ```
 
@@ -99,10 +99,10 @@ now we just iterate over every kanji in Heisig's list, find the corrisponding ka
 <br>(theres probably a cleaner way to do this)
 ```
 kuchinawa@nadeko ~/s/k/w/monogatari [0]
-$kanji_list=$(cat kanji_list) #~reads kanji_list to memory so we're not waiting for my painfully slow HDD I/O for each 'grep'
+$ kanji_list=$(cat kanji_list) #~reads kanji_list to memory so we're not waiting for my painfully slow HDD I/O for each 'grep'
 
 kuchinawa@nadeko ~/s/k/w/monogatari [0]
-$for i in $(cat heisig_list); do kanji=$(printf "$kanji_list" | grep "$i") && ((hesig_kanji+=${kanji% *})); done; echo $hesig_kanji
+$ for i in $(cat heisig_list); do kanji=$(printf "$kanji_list" | grep "$i") && ((hesig_kanji+=${kanji% *})); done; echo $hesig_kanji
 855631
 ```
 
@@ -111,7 +111,7 @@ $for i in $(cat heisig_list); do kanji=$(printf "$kanji_list" | grep "$i") && ((
 ok, now that we have our numbers, we can devide and get our percentage
 ```
 kuchinawa@nadeko ~/s/k/w/monogatari [0]
-$echo "(855631/877196)*100" | bc -l
+$ echo "(855631/877196)*100" | bc -l
 97.54159845690130825900
 ```
 
