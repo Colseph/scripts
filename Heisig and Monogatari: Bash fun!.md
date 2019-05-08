@@ -38,12 +38,13 @@ $ls
  
  
  
-we can do this with a little while loop to read each character then we'll pipe it through some dandies to polish it up.
-```
-cat *.txt | while IFS= read -r -n1 char; do echo $char; done | sort | uniq -c > "kanji_list"
-```
+~~we can do this with a little while loop to separate each character then we'll pipe it through some dandies to polish it up.~~
 
+~~`cat *.txt | while IFS= read -r -n1 char; do echo $char; done | sort | uniq -c > "kanji_list"`~~
 
+we can do this _much faster_(~4x faster) by using grep to seperate each character, then we'll pipe it through some dandies to polish it up.(it does count white spaces a little differently)<a href="#grep_vs_while"><sup>1</sup></a>
+
+`cat *.txt | grep -o . | sort | uniq -c > "kanji_list"`
 
 we didn't worry about sorting out spaces and sign/symbol characters etc.. as theres _sooo_ many in japanese its easier to just do it manually w/ vim.
 <br>now we have a file named `kanji_list`. If we open it, we see something that looks like this:
@@ -117,3 +118,32 @@ $echo "(855631/877196)*100" | bc -l
 
 so there's your answer. if you complete the James Heisig's Remembering the Kanji 1 (6th ed):
 <br>you will recognize(and should know the stroke order) of **97%** of the kanji in the Monogatari Series light novels.
+
+
+
+
+<hr>
+<a id="grep_vs_while">[1]: grep vs while</a>
+
+```
+kuchinawa@nadeko ~/s/k/w/monogatari [0]
+$ time cat *.txt | while IFS= read -r -n1 char; do echo $char; done | sort | uniq -c > "kanji_list_while_loop"
+
+real    1m54.437s
+user    1m20.922s
+sys     1m43.281s
+
+kuchinawa@nadeko ~/s/k/w/monogatari [0]
+$ time cat *.txt | grep -o . | sort | uniq -c > "kanji_list_grep"
+
+real    0m23.957s
+user    0m23.109s
+sys     0m1.406s
+
+kuchinawa@nadeko ~/s/k/w/monogatari [0]
+$ diff kanji_list_while_loop kanji_list_grep
+1d0
+<  102814
+3a3
+>     136
+```
