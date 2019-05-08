@@ -45,7 +45,7 @@ cat *.txt | while IFS= read -r -n1 char; do echo $char; done | sort | uniq -c > 
 
 
 
-we didn't worry about sorting out spaces and sign characters etc.. as theres _sooo_ many in japanese its easier to just do it manually w/ vim.
+we didn't worry about sorting out spaces and sign/symbol characters etc.. as theres _sooo_ many in japanese its easier to just do it manually w/ vim.
 <br>now we have a file named `kanji_list`. If we open it, we see something that looks like this:
 ```
  102814
@@ -109,7 +109,8 @@ $for i in $(cat heisig_list); do kanji=$(printf "$kanji_list" | grep "$i") && ((
 
 ok, now that we have our numbers, we can devide and get our percentage
 ```
-echo "(855631/877196)*100" | bc -l
+kuchinawa@nadeko ~/s/k/w/monogatari [0]
+$echo "(855631/877196)*100" | bc -l
 97.54159845690130825900
 ```
 
