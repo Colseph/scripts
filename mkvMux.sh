@@ -2,7 +2,7 @@
 #~MKV muxer/tagger
 #~requires mkvtoolnix(might attempt ffmpeg ver later?)
 #~Author - LuX/\er (LXR)
-#~Version 0.1 (Lu)
+#~Version 0.1 (Victor)
 #~Changelog -
 #~v0.1(Victor) - Initial Write-up
 #~TODO going to need to add function for parsing arguments for both mkvmerge and mkbpropedit
@@ -11,7 +11,7 @@
 #~~~~~~~~~~#
 #~ Config ~#
 #~~~~~~~~~~#
-DEPENDENCIES=(mkmerge mkvextract mkvpropedit mkvinfo)
+DEPENDENCIES=(mkvmerge mkvextract mkvpropedit mkvinfo)
 
 unset CHAP_ARGS
 unset SUB_ARGS
@@ -78,10 +78,10 @@ _insertArg() {
 
 _remux() {
     printf '%s\n' 'Numbering starts at 0'
-    printf '%s\n' '--default-track "<TID[:bool]>" --forced-track "<TID[:bool]>" --language "TID:lang" --track-name "TID:Name"'
+    printf '%s\n' '--default-track <TID[:bool]> --forced-track <TID[:bool]> --language TID:lang --track-name TID:"Name"'
     _getArgs merge
     [ -e "$i.[att].txt" ] && _attachments
-    mkvmerge -o "$DEST_DIR/${i%.*}.mkv" $EPISODE_ARGS "$i" $SUB_ARGS $ATT_ARGS $TRACK_ORDER $($CHAP_ARGS)
+    mkvmerge -o "$DEST_DIR/${i%.*}.mkv" "${EPISODE_ARGS_ARRAY[@]}" "$i" $SUB_ARGS $ATT_ARGS $TRACK_ORDER $($CHAP_ARGS)
 }
 
 _propEdit() {
@@ -89,7 +89,7 @@ _propEdit() {
     printf '%s\n' '--edit info --set "title=title here" --edit track:n --set "language=[lang]" --set "name=[name]"'
     printf '%s\n' '--edit track:n --set "flag-default=[bool]" --set "flag-forced=[bool]"'
     _getArgs propEdit
-    mkvpropedit "$i" $EPISODE_ARGS $($CHAP_ARGS)
+    mkvpropedit "$i" "${EPISODE_ARGS_ARRAY[@]}" $($CHAP_ARGS)
 }
 
 _attachments() {
@@ -100,7 +100,10 @@ _attachments() {
 
 _getArgs() {
     printf '%s\n' "Please Enter Episode Arguments"
-    read -p ">> " EPISODE_ARGS
+    read -p ">> " EPISODE_ARGS_STRING
+    #~convert string to array to allow spaced argument quoting
+    STR_2_ARR="EPISODE_ARGS_ARRAY=($EPISODE_ARGS_STRING)"
+    eval $STR_2_ARR
     if [ "$1" == "merge" ]; then
         printf '%s\n' "Please Enter Subtite Arguments"
         read -p ">> " SUB_ARGS
@@ -150,11 +153,12 @@ SOURCE_DIR=${SOURCE_DIR:-./}
 DEST_DIR=${DEST_DIR:-./mkvMux_output}
 RUN_TYPE=${RUN_TYPE:-m}
 EXT=${EXT:-mkv}
+_checkDeps
 _checkPaths $SOURCE_DIR $DEST_DIR
 
-read -p "Would you like to Extract Rename Chapters?[y/N]" EDIT_CHAPTERS
+read -p "Would you like to Extract & Rename Chapters?[y/N]" EDIT_CHAPTERS
 EDIT_CHAPTERS=${EDIT_CHAPTERS:-n}
-[ ${EDIT_CHAPTERS,,} == "y" ] && _extractChapters || exit
+[ ${EDIT_CHAPTERS,,} == "y" ] && _extractChapters
 echo beforeloop
 
 for i in "$(ls *.$EXT)"; do
