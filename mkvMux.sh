@@ -78,7 +78,7 @@ _insertArg() {
 
 _remux() {
     printf '%s\n' 'Numbering starts at 0'
-    printf '%s\n' '--default-track <TID[:bool]> --forced-track <TID[:bool]> --language TID:lang --track-name TID:"Name"'
+    printf '%s\n' '--default-track <TID:[bool]> --forced-track <TID:[bool]> --language TID:lang --track-name TID:"Name"'
     _getArgs merge
     [ -e "$i.[att].txt" ] && _attachments
     mkvmerge -o "$DEST_DIR/${i%.*}.mkv" "${EPISODE_ARGS_ARRAY[@]}" "$i" $SUB_ARGS $ATT_ARGS $TRACK_ORDER $($CHAP_ARGS)
@@ -108,6 +108,7 @@ _getArgs() {
         printf '%s\n' "Please Enter Subtite Arguments"
         read -p ">> " SUB_ARGS
         printf '%s\n' "Please Enter Track Order"
+        printf '%s\n' "--track-order <fileID1:TID1,FileID2:TID2,FileID3:TID3,...>"
         read -p ">> " TRACK_ORDER
     fi
 }
