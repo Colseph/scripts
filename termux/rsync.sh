@@ -24,5 +24,5 @@ _removeCopy() {
 #~ スクリプトスタート ~#
 #~~~~~~~~~~~~~~~~~~~~~~#
 for i in "${directories[@]}"; do
-    rsync $(_removeCopy) "${i%:*}" "$server${i#*:}"
+    rsync $(_removeCopy) -e "ssh -i $keyfile" "${i%:*}" "$server:""${i#*:}"
 done
