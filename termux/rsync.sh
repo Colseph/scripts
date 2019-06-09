@@ -11,7 +11,8 @@ remove_after_copy='true' #~bool should local files be removed after sync? accept
 #~array of directories to sync
 #~syntax 'local/directory:remote/directory'
 #~dont forget remote path is relative to one specified in your auth_keys file on the server
-directories=('~/storage/shared/Pictures/Reddit:nsfw/pics/reddit' '~/storage/shared/Download:archive/files/Note5/Downloads')
+#~needs full paths because of hows the directories array is parsed
+directories=('/sdcard/Pictures/Reddit/:nsfw/pics/reddit/' '/sdcard/Pictures/Twitter/:nsfw/pics/twitter/phone_saves/')
 
 #~~~~~~~~~~~~~#
 #~ Functions ~#
@@ -24,5 +25,6 @@ _removeCopy() {
 #~ スクリプトスタート ~#
 #~~~~~~~~~~~~~~~~~~~~~~#
 for i in "${directories[@]}"; do
-    rsync $(_removeCopy) -e "ssh -i $keyfile" "${i%:*}" "$server:""${i#*:}"
+    #~2775 for plex and smb users
+    rsync $(_removeCopy) --progress -a --chmod 2775 -e "ssh -i $keyfile" "${i%:*}" "$server:""${i#*:}"
 done
