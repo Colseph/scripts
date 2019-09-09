@@ -46,6 +46,12 @@ _various scripts to accomidate my lazyness_
    <br>when user kills script w/ crtl-c it will ask if you want to create mp4 from frames.
    <br>has optional flags and defaults
 
+#### [nhentai.sh](https://github.com/Colseph/scripts/blob/master/nhentai.sh)
+   * downloads all nhentai favorites using gallery-dl
+   <br>idk why its not included in gallery-dl(probs because of auth)
+   <br>uses w3m, you login and it saves your cookie in `~/.w3m/cookie` with all your other cookies.
+   <br>obv depends on `w3m` and `gallery-dl`. check to config section to setup gallery-dl command.
+
 #### [crontab.md](https://github.com/Colseph/scripts/blob/master/crontab.md)
 
 #### [Heisig and Monogatari: Bash fun!.md](https://github.com/Colseph/scripts/blob/master/Heisig%20and%20Monogatari:%20Bash%20fun!.md)
