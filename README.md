@@ -40,7 +40,7 @@ _various scripts to accomidate my lazyness_
      <br>orininally made so someday i could change [delinker](https://github.com/Colseph/Delinker) to just bash,
      <br>but i got a little carried away.. lol
 
-#### [timelapse.sh](https://github.com/Colseph/scripts/blob/master/crontab.md)
+#### [timelapse.sh](https://github.com/Colseph/scripts/blob/master/timelapse.sh)
    * simple script for making desktop timelapse.
    <br>uses scrot to take screenshot every n seconds
    <br>when user kills script w/ crtl-c it will ask if you want to create mp4 from frames.
