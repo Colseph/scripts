@@ -6,7 +6,8 @@
 First place the script in your qutebrowser userscripts directory
 (~/.local/share/qutebrowser/userscripts/)
 
-then in order for this script to work you will need to add "arguments.url" to the for loop in main
+then in order for this script to work you will need to edit qute-pass and
+add "arguments.url" to the for loop in main.
 right under where "attempted_targets" is declared
 it should look like this when your done
 /usr/share/qutebrowser/userscripts/qute-pass:
@@ -19,9 +20,9 @@ def main(arguments):
     ...
 
 basically this just makes it so the qute-pass script attempts to match the raw url (or in this case
-our pass file path) along with the parsed url
-this way it should work with our script where the password is in the file, if you decide to call
-qute-pass directly with the url in the file path
+our pass file) along with the parsed url
+this way it should work with our script where the password is in the file, and it will still work
+if you decide to call qute-pass directly with the url in the file path
 
 last you need to make your keybindings
 (should be the same except for the name of the userscript)
