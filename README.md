@@ -52,6 +52,11 @@ _various scripts to accomidate my lazyness_
    <br>uses w3m, you login and it saves your cookie in `~/.w3m/cookie` with all your other cookies.
    <br>obv depends on `w3m` and `gallery-dl`. check to config section to setup gallery-dl command.
 
+#### [qute-pass-wrapper](https://github.com/Colseph/scripts/blob/master/qute-pass-wrapper)
+   * wrapper for qute-pass plugin for qute-browser. allows storing url inside the encrypted file
+   <br>instead of in the file name/path
+   <br>uses pass grep to find the entry, then passes it along with other arguments to qute-pass
+
 #### [crontab.md](https://github.com/Colseph/scripts/blob/master/crontab.md)
 
 #### [Heisig and Monogatari: Bash fun!.md](https://github.com/Colseph/scripts/blob/master/Heisig%20and%20Monogatari:%20Bash%20fun!.md)
