@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+#~allows for urls to be stored inside the the encrypted files
+# -------- setup {{{
+# ------------------------------------------------------
+: '
+First place the script in your qutebrowser userscripts directory
+(~/.local/share/qutebrowser/userscripts/)
+
+then in order for this script to work you will need to add "arguments.url" to the for loop in main
+right under where "attempted_targets" is declared
+it should look like this when your done
+/usr/share/qutebrowser/userscripts/qute-pass:
+
+def main(arguments):
+...
+    candidates = set()
+    attempted_targets = []
+    for target in filter(None, [extract_result.fqdn, extract_result.registered_domain, extract_result.ipv4, arguments.url]):
+    ...
+
+basically this just makes it so the qute-pass script attempts to match the raw url (or in this case
+our pass file path) along with the parsed url
+this way it should work with our script where the password is in the file, if you decide to call
+qute-pass directly with the url in the file path
+
+last you need to make your keybindings
+(should be the same except for the name of the userscript)
+
+bind zl spawn --userscript qute-pass-wrapper
+bind zul spawn --userscript qute-pass-wrapper --username-only
+bind zpl spawn --userscript qute-pass-wrapper --password-only
+bind zol spawn --userscript qute-pass-wrapper --otp-only
+
+or if your username is in the file
+bind zl spawn --userscript qute-pass-wrapper -u "username:(.*)" -U secret
+bind zul spawn --userscript qute-pass-wrapper --username-only -u "username:(.*)" -U secret
+bind zpl spawn --userscript qute-pass-wrapper --password-only -u "username:(.*)" -U secret
+bind zol spawn --userscript qute-pass-wrapper --otp-only -u "username:(.*)" -U secret
+etc..
+
+thats it i think..
+
+oh and your gpg-agent needs to be using a gui interface, otherwise
+if your keys are locked, you wont get a prompt
+'
+# }}}
+# -------- functions {{{
+# ------------------------------------------------------
+_return() {
+	case $1 in
+		0)
+			[[ -n ${entry[1]} ]] && {
+				#~qute-pass splits the path so we have to strip it
+				entry=$(printf '%s\n' "${entry[@]%:*}" | rofi -dmenu)
+				printf '%s\n' "${entry##*'/'}"
+			} || {
+				entry=$(printf '%s\n' "${entry%:*}")
+				printf '%s\n' "${entry##*'/'}"
+			}
+			;;
+		1)
+			printf '%s\n' "$QUTE_URL"
+			;;
+	esac
+}
+
+_qt_exec() {
+	printf '%s' "spawn --userscript qute-pass $qp_args $(_return $1)" >> "$QUTE_FIFO"
+}
+
+_get_entry() {
+	# sed command from
+	# https://stackoverflow.com/questions/17998978/removing-colors-from-output#18000433
+	entry=($(pass grep "${qt_url#*"$1"}" | grep "94m" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g"))
+	[[ -n "$entry" ]] && _qt_exec 0 || return 1
+}
+
+
+# }}}
+# -------- script {{{
+# ------------------------------------------------------
+qp_args="$@"
+qt_url=$(grep -o 'htt.*\.[a-z]*' <<< "$QUTE_URL")
+[[ -n $qt_url ]] && {
+	_get_entry '//' || {
+		[[ "$qt_url" == *"."*"."* ]] && {
+			# if full url with subdomain isnt found, try just base url
+			_get_entry '.' || _qt_exec 1
+		} || _qt_exec 1
+	}
+} || _qt_exec 1
+# }}}
