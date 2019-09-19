@@ -53,7 +53,7 @@ _various scripts to accomidate my lazyness_
    <br>obv depends on `w3m` and `gallery-dl`. check to config section to setup gallery-dl command.
 
 #### [qute-pass-wrapper](https://github.com/Colseph/scripts/blob/master/qute-pass-wrapper)
-   * wrapper for qute-pass plugin for qute-browser. allows storing url inside the encrypted file
+   * wrapper for qute-pass plugin for qutebrowser. allows storing url inside the encrypted file
    <br>instead of in the file name/path
    <br>uses pass grep to find the entry, then passes it along with other arguments to qute-pass
 
