@@ -34,3 +34,6 @@ Whether its scripts I've written to ease my journey, or random things I found in
      <br>mp3 audio out, for... well listening ofc
    * maybe someday ill do something with subs2srs or something to get
      <br>more dialogue out.. (but then id have to time subs so we'll see when that happens)
+     - actually if i do do this ill probs write a custom script that measures time between dialogue
+       <br>and just cut between if its over a threshold, since i personally think it would be
+       <br>annoying to have constant skipping... idk ill have to test this is still a TODO after all..
