@@ -6,7 +6,7 @@
 #~ config ~#
 #~~~~~~~~~~#
 server='zeus@192.168.1.30'
-keyfile='.ssh/rsync' #~path to ssh priv key
+keyfile='~/.ssh/rsync' #~path to ssh priv key
 remove_after_copy='true' #~bool should local files be removed after sync? accepts: [true|false]
 #~array of directories to sync
 #~syntax 'local/directory:remote/directory'

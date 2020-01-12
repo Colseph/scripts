@@ -1,0 +1,33 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+
+: '
+#~~~~~~~~~#
+#~ GUIDE ~#
+#~~~~~~~~~#
+this script takes one argument(a url) then based on the structure of it, decides what to do with it.
+uses a case statement for specifics. if its not matched, then it tries youtube-dl/gallery-dl/wget.
+'
+#~~~~~~~~~~#
+#~ config ~#
+#~~~~~~~~~~#
+
+_wildCard() {
+    #~ask user if remote?
+    #~try youtube/gallery/wget etc..
+}
+
+case "$1" in
+    "https://pixiv.net/member.php?id=*")
+        echo add to scraper
+        echo add to current qeue
+        ;;
+    "https://youtube.com/channel/")
+        echo add to scraper
+        echo add to current qeue
+        echo maybe ask user if want to add to scraper
+        echo defualt just dl(might be a playlist?)idk..
+        ;;
+    *)
+        _wildCard
+        ;;
+esac
