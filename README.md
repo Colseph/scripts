@@ -62,6 +62,9 @@ _various scripts to accomidate my lazyness_
 #### [Termux](https://github.com/Colseph/scripts/tree/master/termux)
    * termux scripts
 
+#### [Japanese](https://github.com/Colseph/scripts/tree/master/japanese)
+   * japanese stuff
+
 #### [gateKeeper.sh](https://github.com/Colseph/scripts/blob/master/gateKeeper.sh)
 _bash script that throttles/kills network traffic based on amount used, and time left until data-cap reset_
    * semi-incomplete atm, just geting base ideas down on "virtual paper" so to speak
