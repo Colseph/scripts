@@ -67,5 +67,5 @@ echo trackID:$trackID
 find "$sourceDir" -type d -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; mkdir -p "$destPath"' - {} "$destDir" "$sourceDir" \;
 
 #~encode files
-find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; ffmpeg -v quiet -stats -i "$1" -map "$4" -movflags +faststart -c:v libx264 -preset slower -crf 19 -ac 2 -c:a aac -b:a 192k "${destPath%.*}.mp4"' - {} "$destDir" "$sourceDir" "$trackID" \;
+find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; ffmpeg -v quiet -stats -i "$1" -map 0:v:0 -map "$4" -movflags +faststart -c:v libx264 -preset slower -crf 19 -ac 2 -c:a aac -b:a 192k "${destPath%.*}.mp4"' - {} "$destDir" "$sourceDir" "$trackID" \;
 echo Done.
