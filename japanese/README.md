@@ -17,7 +17,7 @@ Whether its scripts I've written to ease my journey, or random things I found in
 
 ### Scripts
 
-#### [lolify]()
+#### [lolify](https://github.com/Colseph/scripts/blob/master/japanese/lolify)
    * TODO
    * encoding script, literally same base as lib2mp3.sh
      <br>takes mkv files, spits out small mp4 files
@@ -26,7 +26,7 @@ Whether its scripts I've written to ease my journey, or random things I found in
    * made so i can watch my BDs w/ out subs w/ minimal effort, but might also add in vrv/yt-dl stuff
      <br>_obv if that is added its an example implimentation for edu purposes only .._
 
-#### [zombify]()
+#### [zombify](https://github.com/Colseph/scripts/blob/master/japanese/zombify)
    * TODO
    * yes, another stupid name i know..
    * another reskin of lib2mp3.sh(it is a true masterpiece after all)
