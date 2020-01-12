@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#~encodes existing library to mp4 with mp3 audio
+#~encodes existing library to mp4 with aac audio
 
 #~ config ~#
 
