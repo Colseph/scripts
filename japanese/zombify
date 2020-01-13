@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-#~encodes existting library to mp3
-#~TODO add flag for extension(figure out metadata mapping for different formats?) 
-#~so user can convert to any almost any format
+#~encodes lolified mp4s to mp3
 
 #~ config ~#
 
