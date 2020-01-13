@@ -9,19 +9,149 @@
 #~ functions ~#
 
 _help() {
-    echo "
-    usage:
-    --help show this message
+    echo '
+    usage:  zombify [options]
 
-    -b bitrate for mp3 files
-       defualt=192K
+    options:
 
-    -s source dir(the one w/ the non mp3s)
-       default=./
+        -h  show this message
+    
+        --no_run
+            source script with out starting main
+            (recursion need functions)
 
-    -d destination dir(where you want the mp3s)
-       defualt=./anime_audio
-    "
+    regex dependent defaults:
+    
+    the following **default** values require the file name to match a certain
+    regex pattern:
+    (as of now no matching for seasons with > 99 eps)
+    *required* - <show_name>.SxxExx.<ext> ".*\.[Ss][0-9][0-9][Ee][0-9][0-9]\..*"
+    *optional* - <show_name>.SxxExx.<episode_title>.<ext> ".*\.[Ss][0-9][0-9][Ee][0-9][0-9]\..*\..*"
+
+    if the *required* pattern is not matched, the fallbacks will be used for **all**
+    regex dependent options unless a custom value is specified.
+
+    if the *optional* pattern is not matched, the fallbacks will be used for just that
+    option. again unless a custom value is specified.
+
+    periods are required as delimiters,but you can use periods in names/titles as well 
+    example:
+        testshow.s01e01.mp4                  --      OK
+        test.show.s01e01.mp4                 --      OK
+        test_show.s01e01.episode name.mp4    --      OK
+        test.show.s01e01.episode.name.mp4    --      OK
+        etc..
+
+        testshow_s01e01.mp4                  --      NOT OK
+        testshow s01e01.mp4                  --      NOT OK
+
+    if you specify a custom value for any option it will be used
+    for all files reguardless of whether or not the regex matches.
+
+
+        -ti [title]
+            default=<episode name>(requires optional regex)
+            fallback=<file name>
+        
+        -ar [artist]
+            default=<show title>(requires required regex)
+            fallback=gen_anime_audio
+
+        -al [album]
+            default=<season>(requires required regex)
+            fallback=gen_anime_audio
+
+        -tr [track]
+            default=<episode num>(requires required regex)
+            fallback=blank
+           
+    regex independent defaults:
+
+        -g  [genre]
+            default=anime_audio
+
+        -b  [bitrate]
+            defualt=192K
+
+        -s  [source dir]
+            the one w/ the non mp3s
+            default=./
+
+        -d  [destination dir]
+            where you want the mp3s
+            defualt=./anime_audio
+    '
+}
+
+_parse(){
+    #~manual parsing since files might have more than one period so i cant do something like: array=($(echo $filename | tr '.' '\n'))
+    echo "parsing required regex"
+    se=$(printf '%s' "$filename" | grep -i -o 'S[0-9][0-9]E[0-9][0-9]')
+    season=$(printf '%s' "${se%[Ee]*}" | grep -o '[0-9][0-9]')
+    episode=${se#*[Ee]}
+    showTitle=${filename%".$se"*}
+    episodeTitleExt=${filename#*"$se."}
+    echo "checking optional regex matches(episode title)"
+    if [[ $(awk -F"." '{print NF-1}' <<< "${episodeTitleExt}") -gt 1 ]]; then
+        #~if theres more than one period its not just the extension, gonna guess its the ep title
+        echo "match success"
+        episodeTitle=${episodeTitleExt%.*}
+    else
+        echo "match failed. using filename as episode title"
+        episodeTitle=$filename
+    fi
+}
+
+_attemptDefault(){
+    #~tries to match regex for file, if successfull, use defaults, else use fallback
+    filename="${5##*/}"
+    echo "testing supplied file name: $filename"
+    if [[ $(printf '%s' "$filename" | grep -i -o '.*\.S[0-9][0-9]E[0-9][0-9]\..*') ]]; then
+        echo "name matches required regex"
+        _parse
+        [[ "$1" == "default" ]] && title="$episodeTitle"
+        [[ "$2" == "default" ]] && artist="$showTitle"
+        [[ "$3" == "default" ]] && album="Season $season"
+        [[ "$4" == "default" ]] && track="$episode"
+    else
+        echo "name fails required regex, using fallbacks"
+        [[ "$1" == "default" ]] && title="$filename"
+        [[ "$2" == "default" ]] && artist='gen_anime_audio'
+        [[ "$3" == "default" ]] && album='gen_anime_audio'
+        [[ "$4" == "default" ]] && track=''
+    fi
+}
+
+_encode(){
+    #~gathers needed options and encodes
+    destPath="$2/${1#*"$3"}"
+    echo "item:$destPath"
+    title="$5"
+    artist="$6"
+    album="$7"
+    track="$8"
+    _attemptDefault "$5" "$6" "$7" "$8" "$1"
+    ffmpeg -v quiet -stats -i "$1" -map_metadata -1 -metadata title="$title" -metadata artist="$artist" -metadata album="$album" -metadata track="$track" -metadata genre="$genre" -b:a "$4" "${destPath%.*}.mp3"
+    echo
+}
+
+_main(){
+    echo source:$sourceDir
+    echo dest:$destDir
+    echo bitrate:$bitrate
+    echo genre:$genre
+    echo ..........
+    echo
+
+    #~re-create directory structure
+    echo creating directories
+    find "$sourceDir" -type d -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item[directory]:$destPath"; mkdir -p "$destPath"' - {} "$destDir" "$sourceDir" \;
+    echo
+
+    #~encode files
+    find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c '. "$1" --no_run; _encode "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"' - "$0" {} "$destDir" "$sourceDir" "$bitrate" "$title" "$artist" "$album" "$track" "$genre" \;
+    #find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c '. "$5 --no_run"; destPath="$2/${1#*"$3"}"; echo "item:$destPath"; ffmpeg -v quiet -stats -i "$1" -map_metadata -1 -b:a "$4" "${destPath%.*}.mp3"' - {} "$destDir" "$sourceDir" "$bitrate" "$0" \;
+    echo Done.
 }
 
 
@@ -29,9 +159,33 @@ _help() {
 
 while [ "$1" != "" ]; do
     case $1 in
-        *help)
+        *h*)
             _help
             exit
+           ;;
+       --no_run)
+           shift
+           main=false
+           ;;
+       -ti)
+           shift
+           title="$1"
+           ;;
+       -ar)
+           shift
+           artist="$1"
+           ;;
+       -al)
+           shift
+           album="$1"
+           ;;
+       -tr)
+           shift
+           track="$1"
+           ;;
+       -g)
+           shift
+           genre="$1"
            ;;
        -b)
            shift
@@ -54,17 +208,16 @@ while [ "$1" != "" ]; do
    shift
 done
 #defaults
+main="${main:=true}"
+title="${title:-default}"
+artist="${artist:-default}"
+album="${album:-default}"
+track="${track:-default}"
+genre="${genre:-anime_audio}"
 bitrate="${bitrate:-192K}"
 sourceDir="${sourceDir:-.}"
 destDir="${destDir:-./anime_audio}"
 
-echo source:$sourceDir
-echo dest:$destDir
-echo bitrate:$bitrate
-
-#~re-create directory structure
-find "$sourceDir" -type d -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; mkdir -p "$destPath"' - {} "$destDir" "$sourceDir" \;
-
-#~encode files
-find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; ffmpeg -v quiet -stats -i "$1" -map_metadata -1 -b:a "$4" "${destPath%.*}.mp3"' - {} "$destDir" "$sourceDir" "$bitrate" \;
-echo Done.
+if [[ "$main" == "true" ]]; then
+    _main
+fi
