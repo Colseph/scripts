@@ -12,9 +12,9 @@ _Using [MIA](https://massimmersionapproach.com/) as a guide, so this will be lis
 | Immersion Type    | Hours | Input Source           |
 |:-----------------:|:-----:|:----------------------:|
 | Passive Listening | 5+    | Anime Audio/podcasts   |
-| Active Listening  | 1+    | Anime/TV               |
-| Active Reading    | 1+    | Subs/VNs/Doujins/Manga |
-| SRS               | 1+    |                        |
+| Active Listening  | 1+-   | Anime/TV               |
+| Active Reading    | 1+-   | Subs/VNs/Doujins/Manga |
+| SRS               | 1+-   |                        |
 
 _usually I get about 2+ Hrs total of Active Immersion  
 whether its Listening, Reading, or SRS_
