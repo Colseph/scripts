@@ -18,16 +18,14 @@ Whether its scripts I've written to ease my journey, or random things I found in
 ### Scripts
 
 #### [lolify](https://github.com/Colseph/scripts/blob/master/japanese/lolify)
-   * TODO
    * encoding script, literally same base as lib2mp3.sh
      <br>takes mkv files, spits out small mp4 files
      <br>video track and 1 audio track, no subs
    * mainly so i can save disk space(hence the name)
-   * made so i can watch my BDs w/ out subs w/ minimal effort, but might also add in vrv/yt-dl stuff
-     <br>_obv if that is added its an example implimentation for edu purposes only .._
+   * made so i can watch my BDs w/ out subs w/ minimal effort.
+   * also has yt-dl integration. just downloads like normal, but encodes a little more aggresively
 
 #### [zombify](https://github.com/Colseph/scripts/blob/master/japanese/zombify)
-   * TODO
    * yes, another stupid name i know..
    * based off lib2mp3.sh(it is a true masterpiece after all)
      <br>takes afformentioned mp4 files, and literally just takes the
