@@ -10,8 +10,7 @@ Whether its scripts I've written to ease my journey, or random things I found in
 #### [Heisig and Monogatari: Bash fun!.md](https://github.com/Colseph/scripts/blob/master/japanese/Heisig%20and%20Monogatari:%20Bash%20fun!.md)
    * minor text processing in relation to japanese and light novels
    
-#### [workflow]()
-   * TODO
+#### [workflow](https://github.com/Colseph/scripts/blob/master/japanese/workflow.md)
    * what my ~~anime watching~~ japanese study workflow looks like.
 <hr>
 
