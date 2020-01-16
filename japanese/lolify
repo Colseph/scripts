@@ -17,10 +17,6 @@ _help() {
     
 
         -yt [link]
-            using this option changes the default audio track
-            to 1:a:0 since the majority of the time ytdl will
-            download seperate video and audio files, thus the FID
-            is 1 instead of 0
 
         -t  [audio track]
             defualt=0:a:0 (the first audio track)
