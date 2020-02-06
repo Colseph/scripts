@@ -90,8 +90,8 @@ _parse(){
     showTitle=${filename%".$se"*}
     episodeTitleExt=${filename#*"$se."}
     echo "checking optional regex matches(episode title)"
-    if [[ $(awk -F"." '{print NF-1}' <<< "${episodeTitleExt}") -gt 1 ]]; then
-        #~if theres more than one period its not just the extension, gonna guess its the ep title
+    if [[ $(awk -F"." '{print NF}' <<< "${episodeTitleExt}") -gt 1 ]]; then
+        #~if theres more than one field its not just the extension, gonna guess its the ep title
         echo "match success"
         episodeTitle=${episodeTitleExt%.*}
     else
