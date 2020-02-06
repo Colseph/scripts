@@ -48,7 +48,11 @@ _ytdl(){
     #~encode files downloaded by ytdl
 
     if [[ "$ytdlLink" == *"http"* ]]; then
-        youtube-dl "$1" --netrc --no-continue --ignore-errors --format bestvideo+bestaudio/best --merge-output-format mp4 --output "$destDir/%(uploader)s/%(title)s-%(id)s.%(ext)s"
+	if [[ "$ytdlLink" == *"vrv"* ]]; then
+		youtube-dl "$1" --netrc --no-continue --ignore-errors --format 'mp4[format_id*=hls-audio-ja-JP][format_id!*=hardsub]' --output "$destDir/%(uploader)s/%(title)s-%(id)s.%(ext)s"
+	else
+		youtube-dl "$1" --netrc --no-continue --ignore-errors --format bestvideo+bestaudio/best --merge-output-format mp4 --output "$destDir/%(uploader)s/%(title)s-%(id)s.%(ext)s"
+	fi
     else
         echo no link provided, exiting
         exit
