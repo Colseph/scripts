@@ -22,7 +22,7 @@ Whether its scripts I've written to ease my journey, or random things I found in
      <br>video track and 1 audio track, no subs
    * mainly so i can save disk space(hence the name)
    * made so i can watch my BDs w/ out subs w/ minimal effort.
-   * also has yt-dl integration. just downloads like normal, but encodes a little more aggresively
+   * also has yt-dl integration. just downloads like normal~~, but encodes a little more aggresively~~
 
 #### [zombify](https://github.com/Colseph/scripts/blob/master/japanese/zombify)
    * yes, another stupid name i know..
