@@ -49,7 +49,7 @@ _ytdl(){
 
     if [[ "$ytdlLink" == *"http"* ]]; then
 	if [[ "$ytdlLink" == *"vrv"* ]]; then
-		youtube-dl "$1" --netrc --no-continue --ignore-config --add-metadata --ignore-errors --format 'mp4[format_id*=hls-audio-ja-JP][format_id!*=hardsub]' --output "$destDir/%(uploader)s/%(title)s-%(id)s.%(ext)s"
+		youtube-dl "$1" --netrc --no-continue --ignore-config --add-metadata --ignore-errors --format 'mp4[format_id*=hls-audio-ja-JP][format_id!*=hardsub]' --output "$destDir/%(series)s/%(series)s.S%(season_number)02dE%(episode_number)02d.%(episode)s.%(ext)s"
 	else
 		youtube-dl "$1" --netrc --no-continue --ignore-config --add-metadata --ignore-errors --format bestvideo+bestaudio/best --merge-output-format mp4 --output "$destDir/%(uploader)s/%(title)s-%(id)s.%(ext)s"
 	fi
