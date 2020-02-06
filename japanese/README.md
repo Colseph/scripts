@@ -28,7 +28,7 @@ Whether its scripts I've written to ease my journey, or random things I found in
    * yes, another stupid name i know..
    * based off lib2mp3.sh(it is a true masterpiece after all)
      <br>takes afformentioned mp4 files, and literally just takes the
-     <br>aac audio --> mp3, for... well listening ofc
+     <br>audio --> mp3, for... well listening ofc
    * maybe someday ill do something with subs2srs or something to get
      <br>more dialogue out.. (but then id have to time subs so we'll see when that happens)
      - actually if i do do this ill probs write a custom script that measures time between dialogue
