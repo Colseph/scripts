@@ -35,6 +35,7 @@ _various scripts to accomidate my lazyness_
      <br>uses newsboats built-in `--export-to-opml` to get `<outline/>` with url/title info
      <br>then parses the tags from newsboat `urls` file.
      <br>nests feed tags inside empty `<outline/>` tags with titles.(what flym uses)
+     <br>TODO: only supports one(1) tag per feed atm
 
 #### [time.sh](https://github.com/Colseph/scripts/blob/master/time.sh)
    * does math with timestamps (+,-)(you can _try_ multiplication/division, but its not really possible w/ time
