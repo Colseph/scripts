@@ -29,6 +29,13 @@ _various scripts to accomidate my lazyness_
      <br>had a massive script originally then realized the whole thing could be done in like 2 lines.
      <br>(its not 2 lines because parameters are nice etc..)
 
+#### [newsboat2flym.sh](https://github.com/Colseph/scripts/blob/master/newsboat2flym.sh)
+   * converts newsboat urls file to opml
+     <br>**while preserving categories/tags**(for flym)
+     <br>uses newsboats built-in `--export-to-optml` to get `<outline/>` with url/title info
+     <br>then parses the tags from newsboat `urls` file.
+     <br>nests feed tags inside empty `<outline/>` tags with titles.(what flym uses)
+
 #### [time.sh](https://github.com/Colseph/scripts/blob/master/time.sh)
    * does math with timestamps (+,-)(you can _try_ multiplication/division, but its not really possible w/ time
      <br>can also do logic -- ie. 12:00:00 > 00:1000:00 will return false
