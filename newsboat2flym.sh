@@ -10,11 +10,11 @@ newsboatURLS="$HOME/.newsboat/urls" # where is your newsboat urls file?
 
 # init stuff
 unset cats
-declare -A cats # our nice assiciative array/hashtable
+declare -A cats # our nice associative array/hashtable
 
 # functions
 
-_parseNewsBoatFiles() {
+_parseNewsboatFiles() {
     # reads exported newsboat file, then gets category from urls file and ads outline line to the corresponding cat in the hashtable.
     unset OPML
     declare -A OPML # table for OPML line and extracted url for matching. fmt: [url]=full_line
@@ -31,7 +31,7 @@ _parseNewsBoatFiles() {
 }
 
 _createOPML() {
-    _parseNewsBoatFiles
+    _parseNewsboatFiles
     # spits collected data out in opml format(rough)
     printf '<?xml version="1.0" encoding="utf-8"?>
 <opml version="2.0">
