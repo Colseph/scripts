@@ -32,7 +32,7 @@ _various scripts to accomidate my lazyness_
 #### [newsboat2flym.sh](https://github.com/Colseph/scripts/blob/master/newsboat2flym.sh)
    * converts newsboat urls file to opml
      <br>**while preserving categories/tags**(for flym)
-     <br>uses newsboats built-in `--export-to-optml` to get `<outline/>` with url/title info
+     <br>uses newsboats built-in `--export-to-opml` to get `<outline/>` with url/title info
      <br>then parses the tags from newsboat `urls` file.
      <br>nests feed tags inside empty `<outline/>` tags with titles.(what flym uses)
 
