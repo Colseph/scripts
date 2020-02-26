@@ -7,6 +7,7 @@ createNewsboatOPML="yes" #bool do you want the script to export newsboat urls to
 # if no, then you will need to create it yourself (newsboat --export-to-opml)
 newsboatOPML="$HOME/.newsboat/newsboat_temp_OPML.opml" # where your exported OPML file is or will be if the script is doing if for you
 newsboatURLS="$HOME/.newsboat/urls" # where is your newsboat urls file?
+untaggedCategory="Unsorted" # category name for feeds that dont have a tag
 
 # init stuff
 unset cats
@@ -25,8 +26,15 @@ _parseNewsboatFiles() {
         OPML[$URL]="$(sed -n -e "s|.*\(<.*$URL.*>\)|\1|p" <<< "$RAWOPML")"
     done
     for i in "${!OPML[@]}"; do
-        category=$(sed -n -e "s|.*$i.*\"\(.*\)\".*|\1|p" <<< "$RAWURLS")
-        cats[$category]+="${OPML[$i]}"
+        categoryString=$(sed -n -e "s|$i\(.*\)|\1|p" <<< "$RAWURLS")
+        eval categoryArray=($categoryString) # i know.. eval is bad, but idk how else make the array pay attention to the quotes.. just dont name your tags anything stupid like ');rm -rf /* #'
+        if [[ "${#categoryArray[@]}" -lt "1" ]]; then
+            cats[$untaggedCategory]+="${OPML[$i]}"
+        else
+            for category in "${categoryArray[@]}"; do
+                cats[$category]+="${OPML[$i]}"
+            done
+        fi
     done
 }
 
