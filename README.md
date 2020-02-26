@@ -31,11 +31,14 @@ _various scripts to accomidate my lazyness_
 
 #### [newsboat2flym.sh](https://github.com/Colseph/scripts/blob/master/newsboat2flym.sh)
    * converts newsboat urls file to opml
-     <br>**while preserving categories/tags**(for flym)
-     <br>uses newsboats built-in `--export-to-opml` to get `<outline/>` with url/title info
-     <br>then parses the tags from newsboat `urls` file.
-     <br>nests feed tags inside empty `<outline/>` tags with titles.(what flym uses)
-     <br>TODO: only supports one(1) tag per feed atm
+     <br>**while preserving categories/tags**(same format flym uses)
+     <br>uses newsboats built-in `--export-to-opml` to get `<outline/>` opml tags with url/title info
+     <br>then parses the newsboat tags from newsboat `urls` file.
+     <br>the script works by iterating over newsboat tags, thus everything without a tag will be assigned one.
+     <br>the default category for untagged feeds is 'Unsorted'. can be changed in config section of script.
+     <br>since idiots exist- this script uses `eval` to get newsboat tags while respecting quoted/spaced tags
+     <br>(_yeah there might be a better way to do it, but idk what it is. if you figure it out feel free to do a PR._)
+     <br>so.. dont name your tags stupid things like `);rm -rf /* #`
 
 #### [time.sh](https://github.com/Colseph/scripts/blob/master/time.sh)
    * does math with timestamps (+,-)(you can _try_ multiplication/division, but its not really possible w/ time
