@@ -33,7 +33,7 @@ whether its Listening, Reading, or SRS_
   straight into a text file for later use. I will also have [firefox](https://www.mozilla.org/en-US/firefox/) open to a blank html page with [autoscroll](https://addons.mozilla.org/en-US/firefox/addon/autoscrolling/), and  
   [yomichan](https://addons.mozilla.org/en-US/firefox/addon/yomichan/) so I can quickly look up a word if its _really_ bugging me.
 
-* **Dougins/Manga**  
+* **Doujins/Manga**  
   I'll Generally just read them on my phone, using [Tachiyomi](https://tachiyomi.org/). I'll just screenshot 1T sentences, and add  
   them to srs later.
 
