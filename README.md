@@ -40,6 +40,14 @@ _various scripts to accomidate my lazyness_
      <br>(_yeah there might be a better way to do it, but idk what it is. if you figure it out feel free to do a PR._)
      <br>so.. dont name your tags stupid things like `);rm -rf /* #`
 
+#### [fbmp](https://github.com/Colseph/scripts/blob/master/fbmp)
+   * mplayer in framebuffer (auto fit to tmux pane)(only tested with yaft)
+     <br>specifically for use with tmux. originally made so i wouldnt have to manually type out
+     <br>geometry commands etc.. but added auto sizing to match tmux pane.
+     <br>assumes font chars are 8 pix wide, 16 tall, if things dont line up youll have to change it.
+     <br>as of now, it just matches width and height to tmux pane, eventually ill probably work it
+     <br>to keep the aspect ratio.
+
 #### [time.sh](https://github.com/Colseph/scripts/blob/master/time.sh)
    * does math with timestamps (+,-)(you can _try_ multiplication/division, but its not really possible w/ time
      <br>can also do logic -- ie. 12:00:00 > 00:1000:00 will return false

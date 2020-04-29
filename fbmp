@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# mplayer in framebuffer
+# lazy ass dont want to remember commands(secretly i do but you know)
+# so made script
+
+#~ config ~#
+
+
+#~ functions ~#
+
+_help() {
+    echo "
+    usage:
+
+    -h 
+       show this message
+
+    -p [x:y]
+       position in screen in pixels
+       (accepts any mplayer geometry arg)
+       default=0:0
+
+    -w [int]
+       width for autofit
+       default=690
+
+    "
+}
+
+
+#~ script_start ~#
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -h)
+            _help
+            exit
+           ;;
+       -p)
+           shift
+           geometry_arg="$1"
+           ;;
+       -w)
+           shift
+           xy="$1"
+           ;;
+       *)
+           [[ -e "$1" ]] && {
+	       echo "assuming '$1' is video file, adding to array"
+	       video_array+=("$1")
+           } || {
+	       echo "unknown argument '$1' or file not found, ignoring. use -h for help"
+           }
+           ;;
+   esac
+   shift
+done
+
+#defaults
+#if in tmux pane and no args supplied, size video to pane
+[[ -z "$TMUX_PANE" ]] && {
+    echo not in tmux pane, using static defaults
+    geometry_arg="${geometry_arg:-0:0}"
+    [[ -z "$xy" ]] && xy=("-xy" "${xy_width:-690}") || xy=("-xy" "$xy")
+} || {
+    echo in tmux pane, sizing to pane
+    pane_inf=$(tmux display -pt "${TMUX_PANE}" '#{pane_width}x#{pane_height} #{pane_left}:#{pane_top}')
+    #multiply cause tmux counts coords in spaces instead of pixels..
+    #so you might need to change these numbers depending on your ppi/dpi/font size etc...
+    #deviding your monitor res by the values of `tmux display -pt "${TMUX_PANE}" '#{window_width}x#{window_height}'`
+    #should get you somewhere close..
+
+    pane_size_xy="${pane_inf% *}"
+    pane_size_x="$(printf '%0.f' "$(echo "${pane_size_xy%x*} * 8" | bc -l)")"
+    pane_size_y="$(printf '%0.f' "$(echo "${pane_size_xy#*x} * 16" | bc -l)")"
+
+    pane_pos_xy="${pane_inf#* }"
+    pane_pos_x="$(printf '%0.f' "$(echo "${pane_pos_xy%:*} * 8" | bc -l)")"
+    pane_pos_y="$(printf '%0.f' "$(echo "${pane_pos_xy#*:} * 16" | bc -l)")"
+
+    [[ -z "$xy" ]] && xy=("-x" "$pane_size_x" "-y" "$pane_size_y") || xy=("-xy" "$xy")
+    geometry_arg="${geometry_arg:-$pane_pos_x:$pane_pos_y}"
+}
+mplayer -geometry $geometry_arg -vo fbdev2 -vf scale -zoom "${xy[@]}" "${video_array[@]}" > /dev/null 2>&1
