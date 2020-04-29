@@ -30,6 +30,8 @@ _help() {
        width for autofit
        default=690
 
+    -j 
+       set sub code page to shift-jis
     "
 }
 
@@ -49,6 +51,10 @@ while [ "$1" != "" ]; do
        -w)
            shift
            xy="$1"
+           ;;
+       -j)
+           shift
+	   jp=("-subcp" "shift-jis")
            ;;
        *)
            [[ -e "$1" ]] && {
@@ -87,4 +93,4 @@ done
     [[ -z "$xy" ]] && xy=("-x" "$pane_size_x" "-y" "$pane_size_y") || xy=("-xy" "$xy")
     geometry_arg="${geometry_arg:-$pane_pos_x:$pane_pos_y}"
 }
-mplayer -geometry $geometry_arg -vo fbdev2 -vf scale -zoom "${xy[@]}" "${video_array[@]}" > /dev/null 2>&1
+mplayer "${jp[@]}" -geometry $geometry_arg -vo fbdev2 -vf scale -zoom "${xy[@]}" "${video_array[@]}" > /dev/null 2>&1
