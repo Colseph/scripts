@@ -11,6 +11,12 @@
 _help() {
     echo "
     usage:
+       fbmp [options] [video files]
+       plays videos in framebuffer using mplayer
+       if run from tmux session, will auto size any
+       unset options to match the current pane.
+       if not run from tmux session, defaults to
+       xy 690 positioned at 0:0
 
     -h 
        show this message
@@ -49,7 +55,7 @@ while [ "$1" != "" ]; do
 	       echo "assuming '$1' is video file, adding to array"
 	       video_array+=("$1")
            } || {
-	       echo "unknown argument '$1' or file not found, ignoring. use -h for help"
+	       echo "unknown argument or file not found:'$1', ignoring. use -h for help"
            }
            ;;
    esac
@@ -67,7 +73,7 @@ done
     pane_inf=$(tmux display -pt "${TMUX_PANE}" '#{pane_width}x#{pane_height} #{pane_left}:#{pane_top}')
     #multiply cause tmux counts coords in spaces instead of pixels..
     #so you might need to change these numbers depending on your ppi/dpi/font size etc...
-    #deviding your monitor res by the values of `tmux display -pt "${TMUX_PANE}" '#{window_width}x#{window_height}'`
+    #dividing your monitor res by the values of `tmux display -pt "${TMUX_PANE}" '#{window_width}x#{window_height}'`
     #should get you somewhere close..
 
     pane_size_xy="${pane_inf% *}"
