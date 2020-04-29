@@ -73,7 +73,7 @@ done
 [[ -z "$TMUX_PANE" ]] && {
     echo not in tmux pane, using static defaults
     geometry_arg="${geometry_arg:-0:0}"
-    [[ -z "$xy" ]] && xy=("-xy" "${xy_width:-690}") || xy=("-xy" "$xy")
+    xy=("-xy" "${xy:-690}")
 } || {
     echo in tmux pane, sizing to pane
     pane_inf=$(tmux display -pt "${TMUX_PANE}" '#{pane_width}x#{pane_height} #{pane_left}:#{pane_top}')
