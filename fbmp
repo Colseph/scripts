@@ -48,7 +48,6 @@ usage:
 
 while [ "$1" != "" ]; do
     case $1 in
-
         -h)
             _help
             exit
@@ -65,13 +64,13 @@ while [ "$1" != "" ]; do
             shift
             jp=("-subcp" "shift-jis")
             ;;
-        -yt)
+       -yt)
             shift
             yt=true
             echo "found -yt flag, treating all extra args as video links"
             continue
             ;;
-        *)
+         *)
             [[ -e "$1" ]] && {
                 echo "assuming '$1' is video file, adding to array"
                             video_array+=("$1")
@@ -84,8 +83,8 @@ while [ "$1" != "" ]; do
                 }
             }
             ;;
-        esac
-        shift
+    esac
+    shift
 done
 
 #defaults
