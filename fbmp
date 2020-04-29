@@ -10,29 +10,37 @@
 
 _help() {
     echo "
-    usage:
-       fbmp [options] [video files]
-       plays videos in framebuffer using mplayer
-       if run from tmux session, will auto size any
-       unset options to match the current pane.
-       if not run from tmux session, defaults to
-       xy 690 positioned at 0:0
+usage:
+  fbmp [options] [video files]
 
-    -h 
-       show this message
+  plays videos in framebuffer using mplayer
+  if run from tmux session, will auto size any
+  unset options to match the current pane.
+  if not run from tmux session, defaults to
+  xy 690 positioned at 0:0
 
-    -p [x:y]
-       position in screen in pixels
-       (accepts any mplayer geometry arg)
-       default=0:0
+     -h
+        show this message
 
-    -w [int]
-       width for autofit
-       default=690
+     -p [x:y]
+        position in screen in pixels
+        (accepts any mplayer geometry arg)
+        default=0:0
 
-    -j 
-       set sub code page to shift-jis
-    "
+     -w [int]
+        width for autofit
+        default=690
+
+     -j
+        set sub code page to shift-jis
+
+     -yt
+        treat all extra arguments as video links
+        and attempt to play with youtube-dl
+        **only affects arguments after this flag,
+        so flag must be given before links**
+
+            "
 }
 
 
@@ -40,32 +48,44 @@ _help() {
 
 while [ "$1" != "" ]; do
     case $1 in
+
         -h)
             _help
             exit
-           ;;
-       -p)
-           shift
-           geometry_arg="$1"
-           ;;
-       -w)
-           shift
-           xy="$1"
-           ;;
-       -j)
-           shift
-	   jp=("-subcp" "shift-jis")
-           ;;
-       *)
-           [[ -e "$1" ]] && {
-	       echo "assuming '$1' is video file, adding to array"
-	       video_array+=("$1")
-           } || {
-	       echo "unknown argument or file not found:'$1', ignoring. use -h for help"
-           }
-           ;;
-   esac
-   shift
+            ;;
+        -p)
+            shift
+            geometry_arg="$1"
+            ;;
+        -w)
+            shift
+            xy="$1"
+            ;;
+        -j)
+            shift
+            jp=("-subcp" "shift-jis")
+            ;;
+        -yt)
+            shift
+            yt=true
+            echo "found -yt flag, treating all extra args as video links"
+            continue
+            ;;
+        *)
+            [[ -e "$1" ]] && {
+                echo "assuming '$1' is video file, adding to array"
+                            video_array+=("$1")
+            } || {
+                [[ -z "$yt" ]] && {
+                    echo "unknown argument or file not found:'$1', ignoring. use -h for help"
+                } || {
+                    echo "adding link url: $1"
+                    video_array+=("$1")
+                }
+            }
+            ;;
+        esac
+        shift
 done
 
 #defaults
@@ -93,4 +113,8 @@ done
     [[ -z "$xy" ]] && xy=("-x" "$pane_size_x" "-y" "$pane_size_y") || xy=("-xy" "$xy")
     geometry_arg="${geometry_arg:-$pane_pos_x:$pane_pos_y}"
 }
-mplayer "${jp[@]}" -geometry $geometry_arg -vo fbdev2 -vf scale -zoom "${xy[@]}" "${video_array[@]}" > /dev/null 2>&1
+[[ -z "$yt" ]] && {
+    mplayer "${jp[@]}" -geometry $geometry_arg -vo fbdev2 -vf scale -zoom "${xy[@]}" "${video_array[@]}" > /dev/null 2>&1
+} || {
+    mplayer "${jp[@]}" -geometry $geometry_arg -vo fbdev2 -vf scale -zoom "${xy[@]}" $(youtube-dl -f best -g "${video_array[@]}") > /dev/null 2>&1
+}
