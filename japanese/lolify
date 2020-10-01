@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 #~encodes existing library to mp4 with aac audio
-#~or downloads videos with ytdl and lolifys them (uses .netrc for auth)
 
 #~ config ~#
 
@@ -11,53 +10,277 @@ _help() {
     echo "
     usage:  lolify [options]
 
+    lolify will look for a lolify.cfg file inside the source directory.
+    its an optional file, that contains one flag + args per line
+    if an arg is both specified when running the script and in the cfg
+    file, the arg in the cfg file will take presedence, this means you can
+    specify an input and output directory when running the script in a cron
+    job, then if you want to change the output directory, you can override the
+    option set in the cron job without having to change it
+
+
     options:
 
         -h  show this message
-    
 
-        -yt [link]
 
-        -t  [audio track]
+        -a  audiotrack
+
             defualt=0:a:0 (the first audio track)
             (the first 0 is the input FID or file id
             the 'a' means we want audio
             the last 0 is the TID or which audio file we want
 
-        -s  [source dir]
-            the one w/ the non mp4s
-            default=./
 
-        -d  [destination dir]
-            where you want the mp4s
+        -s  subtitletrack
+
+            default=none
+            uses same format as -a
+            0:s:0 == first subtitle track
+            only subs inside the source file(mkv etc)
+            all subs including external, should be automatically
+            detected and renamed to match the specified name regex
+
+
+        -n  name:rangeregex
+
+            default=use difference between files as the rangeregex, leave
+            everything else unchanged:
+            if you had files with the schema of 'showname disc 1 title 2.mkv',
+            since the '1 title 2' is the only part that changes between files
+            you would end up with something like this:
+            'show name disc 1 title 2.mkv' --> 'show name disc 2.mp4
+
+            if you dont want to use '-r default' numbering(leave name competely
+            unchanged) pass '-r none' without using '-n'. if you want to use
+            a custom name, but leave the numbering the same, pass both '-n' and
+            '-r none'
+
+            name       - the new full name for the file with a place holder for the
+                         range '%(range)s' and extension '%(ext)s'
+                         example:
+                         Anohana.%(range)s.%(ext)s
+
+            rangeregex - the regular expression to match the source file
+                         numbering. the default is the difference between files
+                         as explained above. main use for this would be if you
+                         are not changing the name but still want to strip some
+                         of the default name(the 'disc' in the default example)
+                         example:
+                         'disc [0-9]* title [0-9]*'
+
+            each can be used alone. to only use a rangeregex just use a leading
+            ':' likewise if you only want to use the name formatting, just use
+            a trailing ':'
+
+
+        -r  [prefix]range[,range2][,prefix3:range3][... ]
+
+            default=1-x (where x is the total number of files)
+            use '-r none' to leave numbering/ordering unchanged
+
+            prefix  - the prefix that will go in front of the next specified
+                      range, ie to get SXXEXX you would use '-r S01E:01-09'
+
+            range   - basic range of numbers(1-23), or a single number(03)
+                      the range will be 0-padded to match the 'longest' number
+                      ie, 1-23 or 01-9 will result in 01, 02 etc, while
+                      1-9 will result in 1, 2 etc..
+                      if you have more files than ranges specified, the default
+                      will be used **TODO** filling in empty spots??
+                      ie. -r 03-04,S00E:01
+                      would auto fill 01-02, then continue at 05-x?
+                      only filling non prefix?
+                      so if we had prefixes, then it would start at 01
+
+            -r works by sorting your files, then iterating over them and
+            assigning the range/numbering as speficied. accepting multiple
+            ranges allows you to number for specials or scrambled discs
+            for example: if you had 23 episodes the 4th ep down was special 3
+            or something you might do this:
+                -r S01E:01-03,S00E:03,S01E:04-23
+
+
+        -t  target
+
+            the directory w/ the non mp4s
+            (the one you've got your sights on so to speak. think ln)
+            default=./
+            
+
+        -d  destination
+
+            where you want the mp4s to end up
             defualt=./lolified
     "
 }
 
-_library(){
+_lolify(){
     #~encode existing library
 
     #~re-create directory structure
     find "$sourceDir" -type d -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; mkdir -p "$destPath"' - {} "$destDir" "$sourceDir" \;
 
     #~encode files
-    find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; ffmpeg -v quiet -stats -i "$1" -map 0:v:0 -map "$4" -movflags +faststart -c:v libx264 -preset slower -crf 19 -ac 2 -c:a aac -b:a 192k "${destPath%.*}.mp4"' - {} "$destDir" "$sourceDir" "$trackID" \;
+    #find "$sourceDir" -type f -not -path "*$destDir*" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; ffmpeg -v quiet -stats -i "$1" -map 0:v:0 -map "$4" -movflags +faststart -c:v libx264 -preset slower -crf 19 -ac 2 -c:a aac -b:a 192k "${destPath%.*}.mp4"' - {} "$destDir" "$sourceDir" "$audioTrackID" \;
+    find "$sourceDir" -type f -not -path "*$destDir*" -not -name "lolify.cfg" -exec bash -c 'destPath="$2/${1#*"$3"}"; echo "item:$destPath"; cp "$1" "${destPath%.*}.mp4"' - {} "$destDir" "$sourceDir" "$audioTrackID" \;
 }
 
-_ytdl(){
-    #~encode files downloaded by ytdl
+_destFileList() {
+    #function just because i use it more than once
+    find "$destDir" -type f
+}
 
-    if [[ "$ytdlLink" == *"http"* ]]; then
-	if [[ "$ytdlLink" == *"vrv"* ]]; then
-		youtube-dl "$1" --netrc --no-continue --ignore-config --add-metadata --ignore-errors --format 'mp4[format_id*=hls-audio-ja-JP][format_id!*=hardsub]' --output "$destDir/%(series)s/%(series)s.S%(season_number)02dE%(episode_number)02d.%(episode)s.%(ext)s"
-	else
-		youtube-dl "$1" --netrc --no-continue --ignore-config --add-metadata --ignore-errors --format bestvideo+bestaudio/best --merge-output-format mp4 --output "$destDir/%(uploader)s/%(title)s-%(id)s.%(ext)s"
-	fi
+_rangeParse() {
+    #parses range, creates array:
+    #start    [0]   int
+    #end      [1]   int
+    #asc/desc [2]   int (1|-1)
+    #padding  [3]   int
+    #prefix   [4]   string
+    #bash has a hard time passing an array to another function when some of the
+    #items have spaces in them.. so we need to let the other function use this
+    #very array..
+    r=()
+    local range="${1#*:}"
+    r+=("${range%-*}")
+    if [[ "${range#*-}" == 'x' ]]; then
+        r+=($(_destFileList | wc -l))
     else
-        echo no link provided, exiting
-        exit
+        r+=("${range#*-}")
     fi
+    if [[ ${r[0]} -gt ${r[1]} ]]; then
+        r+=(-1)
+    else
+        r+=(1)
+    fi
+    r+=("$((${#r[0]} > ${#r[1]} ? ${#r[0]} : ${#r[1]}))")
+    if [[ "$1" == *":"* ]]; then
+        r+=("${1%:*}")
+    fi
+}
 
+_rangeBuildArray() {
+    ranged_array=()
+    for i in "${range[@]}"; do
+        _rangeParse "$i"
+        for j in $(seq ${r[0]} ${r[2]} ${r[1]}); do
+            ranged_array+=("$(printf "${r[4]}%0${r[3]}d" "$j")")
+        done
+    done
+}
+
+_parseDiff() {
+    #parses little 23c24,35 lines from diff command
+    #creates nice little array with the proper ones I want
+    #TODO
+}
+_stringDiff() {
+    #some magic here...
+    #we need to find the differences between a list of files..
+    #how are we going to do that? diff.
+    #create dict? of spaced? then create array with each char index
+    #and get lowest index and highest index where characters dont match?
+    control_file=$(_destFileList | head -n 1)
+    diff_end=''
+    diff_start=''
+    while read compare_file_ext; do
+        compare_file="${compare_file_ext%.*}"
+        diff <(echo "${control_file%.*}" | grep -o .) <(echo "$compare_file" | \
+            grep -o .)
+        difference=$(diff <(echo "${control_file%.*}" | grep -o .) \
+            <(echo "$compare_file" | grep -o .) | grep -vE '<|>' | \
+            grep -o '[0-9]*[a-z][0-9]*' | grep -o '[0-9]*')
+        #grab the diff on the highest and lowest lines(the biggest diff)
+        diff_end=$(printf '%s\n' "$difference" "$diff_end" | sort -n |\
+            tail -n1)
+        diff_start=$(printf '%s\n' "$difference" "${diff_start:-$diff_end}" | sort -n |\
+            head -n1)
+        echo diff: $difference
+        echo ds: $diff_start
+        echo de: $diff_end
+        echo "control: ${control_file%.*}"
+        echo "compare: $compare_file"
+    done <<< $(_destFileList | sort)
+    while read file; do
+        echo $diff_start
+        echo $diff_end
+        echo "${file:0:$diff_start}%(range)s${file:$diff_end}"
+    done <<< $(_destFileList)
+}
+
+_organize() {
+    _rangeBuildArray
+    printf '%s\n' "${ranged_array[@]}"
+
+    local file_iter=0
+    _destFileList | sort | while read file; do
+        echo $file
+        echo ${ranged_array[$file_iter]}
+        ((file_iter++))
+    done
+    _stringDiff
+
+    ##~renames files to specified regex
+    ##~gets naming scheme if changed
+    ##~gets range and moves files accordingly
+    #echo organize
+    #encoding just happened, so we're now in the new directory with the original file names.
+    #we need to change the names. first we need to figure out what the range-regex is,
+    #and we need to rename everything except that.(reasoning for this is the range regex
+    #wont exist after we change it(obviously). so we first need to change rest of the name..
+    #cant really do it with 'rename' since you cand exclude stuff etc..
+    #should probs use sed.
+    #ok..
+
+    #need a seperate function that gives us a list/array of names for the current segment of files
+    #we ok.. so, first first 
+    #we get a list of the encoded files.
+    #we then split the ranges. see what files we need custom names for
+    #we're going to start at the beginning and iterate over in segments
+    #ie
+    #_buildNameDict() {
+    #    #takes file list(sorted in array)
+    #    #iterates over that array, using ranges(how?)
+    #    #creates dictionary with [originalfilename]=newfilename format
+    #}
+    #(file1.mkv file2.mkv)
+
+    #for i in "${fileArray[@]}"; do
+    #    #we can get index with #
+    #    #we just need a way to figure out wich range it fits in..
+    #    #im over thinking this.. it starts at the beginning. and iterates
+    #    #over every file.. no filling in gaps.. you order them so the names
+    #    #match sort order.... ugh..
+    #    #first we need a way to find which array indexes fit into each range
+    #    #currently on file 0
+    #    first range
+    #    if current index is inside array index(not range)
+    #        with range: 3-5,1-2
+    #    array index: 0 1 2 3 4 5 6 7 8 9
+    #    range index: 3 4 5 1 2 6 7 8 9 10
+    #                          ^end of ranges so rest filled in with default(highest number contnued to end)
+    #    _math() {
+    #        save typing
+    #        printf '%s' "$@" | bc -l
+    #    }
+    #    get length of range
+    #    first iterate over ranges,
+    #        if current range contains : add prefix etc..
+    #            for i in ${ranges[@]}; do
+    #                unset prefix
+    #                if range has prefix
+    #                    prefix=
+    #                fi
+    #                #since math is AMAZING we'll just use that instead of manually counting lel
+    #                range length = $(_math "$i") #we'll use ${var#-} to get absolute value
+    #                ending number is $range#*-
+    #                starting number is $range%-*
+    #                for i in seq $starting $ending
+    #                    rangeIndexed array+=#number
+    #                dont really actually need math, just add them to the array
+
+    #    ok so..
 }
 
 
@@ -69,22 +292,32 @@ while [ "$1" != "" ]; do
             _help
             exit
            ;;
-       -t)
+       -a)
            shift
-           trackID="$1"
+           audioTrackID="$1"
            ;;
        -s)
            shift
-           sourceDir="$1"
+           subtitleTrackID="$1"
+           ;;
+       -n)
+           shift
+           nameRegex="$1"
+           ;;
+       -r)
+           shift
+           IFSOLD="$IFS"
+           IFS=','
+           read -r -a range <<< "$1"
+           IFS="$IFSOLD"
+           ;;
+       -t)
+           shift
+           targetDir="$1"
            ;;
        -d)
            shift
            destDir="$1"
-           ;;
-       -yt)
-           shift
-           ytdlLink="$1"
-           ytdl=true
            ;;
        *)
            echo "unknown option: '$1'"
@@ -95,19 +328,23 @@ while [ "$1" != "" ]; do
    shift
 done
 #defaults
-trackID="${trackID:-0:a:0}"
+audioTrackID="${audioTrackID:-0:a:0}"
+subtitleTrackID="${subtitleTrackID:-0:s:0}"
+name="${name:-none}"
+if [[ -z $range ]]; then
+    range=(1-x})
+fi
 sourceDir="${sourceDir:-.}"
 destDir="${destDir:-./lolified}"
-ytdl="${ytdl:-false}"
 
+echo audioTrackID:$audioTrackID
+echo subtitleTrackID:$subtitleTrackID
+echo name:$name
+echo range:${range[@]}
 echo source:$sourceDir
 echo dest:$destDir
-echo trackID:$trackID
 
-if [[ "$ytdl" == "true" ]]; then
-    _ytdl "$ytdlLink"
-else
-    _library
-fi
+_lolify
+_organize
 
 echo Done.
