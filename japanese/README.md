@@ -32,5 +32,5 @@ interesting, you'll probably find them here.
      afformentioned mp4 files, and literally just takes the audio --> mp3,
      for... well listening ofc
 
-[1]: Heisig%20and%20Monogatari:%20Bash%20fun!.md
+[1]: /Heisig%20and%20Monogatari:%20Bash%20fun!.md
 [2]: workflow.md
