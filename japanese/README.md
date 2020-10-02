@@ -10,10 +10,10 @@ interesting, you'll probably find them here.
 
 ### Reads
 
-#### [Heisig and Monogatari: Bash fun!.md](https://github.com/Colseph/scripts/blob/master/japanese/Heisig%20and%20Monogatari:%20Bash%20fun!.md)
+#### [Heisig and Monogatari: Bash fun!.md][1]
    * minor text processing in relation to japanese and light novels
    
-#### [workflow](https://github.com/Colseph/scripts/blob/master/japanese/workflow.md)
+#### [workflow][2]
    * what my ~~anime watching~~ japanese study workflow looks like.
 <hr>
 
@@ -31,3 +31,6 @@ interesting, you'll probably find them here.
    * based off lib2mp3.sh(it is a true masterpiece after all) takes
      afformentioned mp4 files, and literally just takes the audio --> mp3,
      for... well listening ofc
+
+[1]: Heisig%20and%20Monogatari:%20Bash%20fun!.md
+[2]: workflow.md
