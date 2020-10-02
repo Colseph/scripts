@@ -19,18 +19,20 @@ interesting, you'll probably find them here.
 
 ### Scripts
 
-#### [lolify](https://github.com/Colseph/scripts/blob/master/japanese/lolify)
+#### [lolify][3]
    * encoding script, literally same base as lib2mp3.sh. takes mkv files, spits
      out small mp4 files w/ video track and 1 audio track, no subs
    * mainly so i can save disk space(hence the name)
    * made so i can watch my BDs w/ out subs w/ minimal effort.
    * ~~also has yt-dl integration.~~(removed)
 
-#### [zombify](https://github.com/Colseph/scripts/blob/master/japanese/zombify)
+#### [zombify][4]
    * yes, another stupid name i know..
    * based off lib2mp3.sh(it is a true masterpiece after all) takes
      afformentioned mp4 files, and literally just takes the audio --> mp3,
      for... well listening ofc
 
-[1]: /Heisig%20and%20Monogatari:%20Bash%20fun!.md
-[2]: workflow.md
+[1]: /japanese/Heisig%20and%20Monogatari:%20Bash%20fun!.md
+[2]: /japanese/workflow.md
+[3]: /japanese/lolify
+[4]: /japanese/zombify
