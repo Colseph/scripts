@@ -1,8 +1,11 @@
 ## Japanese
-_A wonderful language. The study of which somehow manages to bring moments that rival temporary enlightenment, while at the same time leaving me more confused than a dog when it realizes the thing it just bit was its own tail._
+_A wonderful language. The study of which somehow manages to bring moments that
+rival temporary enlightenment, while at the same time leaving me more confused
+than a dog when it realizes the thing it just bit was its own tail._
 
 ### This folder contains random items that pertain to japanese.
-Whether its scripts I've written to ease my journey, or random things I found interesting, you'll probably find them here.
+Whether its scripts I've written to ease my journey, or random things I found
+interesting, you'll probably find them here.
 <hr>
 
 ### Reads
@@ -17,20 +20,14 @@ Whether its scripts I've written to ease my journey, or random things I found in
 ### Scripts
 
 #### [lolify](https://github.com/Colseph/scripts/blob/master/japanese/lolify)
-   * encoding script, literally same base as lib2mp3.sh
-     <br>takes mkv files, spits out small mp4 files
-     <br>video track and 1 audio track, no subs
+   * encoding script, literally same base as lib2mp3.sh. takes mkv files, spits
+     out small mp4 files w/ video track and 1 audio track, no subs
    * mainly so i can save disk space(hence the name)
    * made so i can watch my BDs w/ out subs w/ minimal effort.
-   * also has yt-dl integration.
+   * ~~also has yt-dl integration.~~(removed)
 
 #### [zombify](https://github.com/Colseph/scripts/blob/master/japanese/zombify)
    * yes, another stupid name i know..
-   * based off lib2mp3.sh(it is a true masterpiece after all)
-     <br>takes afformentioned mp4 files, and literally just takes the
-     <br>audio --> mp3, for... well listening ofc
-   * maybe someday ill do something with subs2srs or something to get
-     <br>more dialogue out.. (but then id have to time subs so we'll see when that happens)
-     - actually if i do do this ill probs write a custom script that measures time between dialogue
-       <br>and just cut between if its over a threshold, since i personally think it would be
-       <br>annoying to have constant skipping... idk ill have to test this is still a TODO after all..
+   * based off lib2mp3.sh(it is a true masterpiece after all) takes
+     afformentioned mp4 files, and literally just takes the audio --> mp3,
+     for... well listening ofc
