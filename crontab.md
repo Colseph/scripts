@@ -3,7 +3,8 @@ _should be a gist or something, but wanted it here so its w/ my other scripts.._
 
 ## archiving multiple links w/ tools like youtube-dl/gallery-dl
 
-_instead of having a cronjob for each channel/artist/gallery - one line in crontab that reads textfile w/ links_
+_instead of having a cronjob for each channel/artist/gallery - one line in
+crontab that reads textfile w/ links_
 
 _easier to add a link to a text file than create a new cronjob_
 
@@ -12,8 +13,10 @@ _easier to add a link to a text file than create a new cronjob_
 
 ### gallery-dl
 
-_iterates over lines in_`~/.config/gallery-dl/gallery-dl.txt`_, only processes lines w/_ `link:` _at beginning_
-<br>_im not going to go into detail about configs. for that, see wiki [here](https://github.com/mikf/gallery-dl/tree/master/docs)_
+_iterates over lines in_`~/.config/gallery-dl/gallery-dl.txt`_, only processes
+lines w/_ `link:` _at beginning_
+
+_im not going to go into detail about configs. for that, see wiki [here][1]_
 
 #### crontab:
 
@@ -25,21 +28,24 @@ while read LINE; do [ "${LINE\%\%:*}" == "link" ] && gallery-dl --ignore-config 
 
 _comment/artistname_
 
-`this line will be treated as a comment`
-<br>`link:[insert link here]`
+`this line will be treated as a comment`  
+`link:[insert link here]`
 
 
 ### youtube-dl
 
 _more advanced than one for gallery-dl as it accepts flags in textfile_
-<br>_iterates over_ `~/.config/youtube-dl/youtube-dl.txt`_, only processes lines containing_ `link=(`
 
-~~**as of now, spaces dont work for flags passed in the textfile**~~
-<br>spaces **do** work now you just need to quote them, see example.
+_iterates over_ `~/.config/youtube-dl/youtube-dl.txt`_, only processes lines
+containing_ `link=(`
 
-you could just have a set of flags/urls on each line without the whole 'if' statement
-<br>but this way i can put comments and idk how it would handle spaces the other way
-<br>if you quote an array w/ the '@' bash is smart enough to properly quote each argument(or treat each like its quoted.)
+~~**as of now, spaces dont work for flags passed in the textfile**~~ spaces
+**do** work now you just need to quote them, see example.
+
+you could just have a set of flags/urls on each line without the whole 'if'
+statement but this way i can put comments and idk how it would handle spaces
+the other way if you quote an array w/ the '@' bash is smart enough to properly
+quote each argument(or treat each like its quoted.)
 
 #### crontab:
 
@@ -55,10 +61,14 @@ while read LINE; do if [[ "$LINE" == *"link=("* ]]; then eval $LINE; youtube-dl 
 
 #### textfile`youtube-dl.txt`:
 
-_links and optional link specific flags(filter names etc..) in array format as that seemed to be the easiest way to keep link and flags associated_
+_links and optional link specific flags(filter names etc..) in array format as
+that seemed to be the easiest way to keep link and flags associated_
 
-_you can also override the default flags you set, as later flags have higher priority_
+_you can also override the default flags you set, as later flags have higher
+priority_
 
-`this will be treated as a comment`
-<br>`link=(--optional-flag-here --other-flag 'data for flag w/ space' 'https://link.here.com')`
+`this will be treated as a comment`  
+`link=(--optional-flag-here --other-flag 'data for flag w/ space' 'https://link.here.com')`
 <hr>
+
+[1]: https://github.com/mikf/gallery-dl/tree/master/docs

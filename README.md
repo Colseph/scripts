@@ -2,34 +2,42 @@
 _various scripts to accomidate my lazyness_
 
 
-#### [lib2mp3.sh](https://github.com/Colseph/scripts/blob/master/lib2mp3.sh)
+#### [lib2mp3.sh][1]
    * creates an mp3 version of flac/alac/whatever music library.
-     <br>**while preserving the folder structure**
-     <br>had a massive script originally then realized the whole thing could be done in like 2 lines.
-     <br>(its not 2 lines because parameters are nice etc..)
+     **while preserving the folder structure**
+   * had a massive script originally then realized the whole thing could be
+     done in like 2 lines. (its not 2 lines because parameters are nice etc..)
 
-#### [fbmp](https://github.com/Colseph/scripts/blob/master/fbmp)
+#### [fbmp][2]
    * mplayer in framebuffer (auto fit to tmux pane)(only tested with yaft)
-     <br>specifically for use with tmux. originally made so i wouldnt have to manually type out
-     <br>geometry commands etc.. but added auto sizing to match tmux pane.
-     <br>assumes font chars are 8 pix wide, 16 tall, if things dont line up youll have to change it.
-     <br>as of now, it just matches width and height to tmux pane, eventually ill probably work it
-     <br>to keep the aspect ratio.
+   * originally made so i wouldnt have to manually type out geometry commands
+     etc.. but added auto sizing to match tmux pane. assumes font chars are 8
+     pix wide, 16 tall, if things dont line up youll have to change it. as of
+     now, it just matches width and height to tmux pane, eventually ill
+     probably work it to keep the aspect ratio.
 
-#### [timelapse.sh](https://github.com/Colseph/scripts/blob/master/timelapse.sh)
+#### [timelapse.sh][3]
    * simple script for making desktop timelapse.
-   <br>uses scrot to take screenshot every n seconds
-   <br>when user kills script w/ crtl-c it will ask if you want to create mp4 from frames.
-   <br>has optional flags and defaults
+   * uses scrot to take screenshot every n seconds, when user kills script w/
+     crtl-c it will ask if you want to create mp4 from frames.
+   * has optional flags and defaults
 
-#### [crontab.md](https://github.com/Colseph/scripts/blob/master/crontab.md)
+#### [crontab.md][4]
 
-#### [Termux](https://github.com/Colseph/scripts/tree/master/termux)
+#### [Termux][5]
    * termux scripts
 
-#### [Japanese](https://github.com/Colseph/scripts/tree/master/japanese)
+#### [Japanese][6]
    * japanese stuff
 
-#### [Archive](https://github.com/Colseph/scripts/tree/master/archive)
-   * old broken scripts I no longer use/update etc...
-     <br>kept for reference(without needing to go back in time to some old commit)
+#### [Archive][7]
+   * old broken scripts I no longer use/update etc... kept for
+     reference(without needing to go back in time to some old commit)
+
+[1]: /lib2mp3.sh
+[2]: /fbmp
+[3]: /timelapse.sh
+[4]: /crontab.md
+[5]: /termux
+[6]: /japanese
+[7]: /archive

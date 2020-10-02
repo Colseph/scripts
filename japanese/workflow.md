@@ -70,7 +70,7 @@ Reading, or SRS_
 <hr>
 
 [1]: https://www.makemkv.com/
-[2]: https://github.com/Colseph/scripts/blob/master/japanese/lolify
+[2]: /japanese/lolify
 [3]: https://kitsunekko.net/
 [4]: https://mpv.io/
 [5]: https://code.google.com/archive/p/interactive-text-hooker/
@@ -78,7 +78,7 @@ Reading, or SRS_
 [7]: https://addons.mozilla.org/en-US/firefox/addon/autoscrolling/
 [8]: https://addons.mozilla.org/en-US/firefox/addon/yomichan/
 [9]: https://tachiyomi.org/
-[10]: https://github.com/Colseph/scripts/blob/master/japanese/zombify
+[10]: /japanese/zombify
 [11]: https://www.mediafire.com/file/1svvsr7f9cnpwka/Recognition_RTK.apkg/
 [12]: https://apps.ankiweb.net/
 [13]: https://en.wikipedia.org/wiki/Remembering_the_Kanji_and_Remembering_the_Hanzi
